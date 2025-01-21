@@ -13,4 +13,5 @@ export type PlatformSelectProp = {
 export type SearchTag = {
   id: number;
   name: string;
+  highlighted?: boolean;
 };
