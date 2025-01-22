@@ -3,6 +3,7 @@ import useGetQuery from '@/hooks/useGetQuery';
 import { PlatformSelectProp, SuccessResponse } from '@/types';
 import { FormEvent } from 'react';
 import TagsInput from './TagsInput';
+import DescriptionEditor from './DescriptionEditor';
 
 const difficulties = [
   {
@@ -104,6 +105,17 @@ const PostForm = ({ onCancel }: PostFormProp) => {
       </div>
 
       <TagsInput />
+
+      <InputField
+        type="url"
+        name="link"
+        id="link"
+        label="Link"
+        placeholder="Enter link"
+        required={true}
+      />
+
+      <DescriptionEditor />
 
       <div className="flex items-center justify-start gap-4">
         <button

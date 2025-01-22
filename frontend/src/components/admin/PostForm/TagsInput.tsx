@@ -88,7 +88,7 @@ const TagsInput = () => {
           {selectedTags.map((tag) => (
             <li
               onClick={() => deleteSelectedTag(tag.id)}
-              className="text-[12px] p-1 text-center text-white rounded-sm bg-slate-800 cursor-pointer"
+              className="text-[12px] p-1 text-center text-white rounded-md bg-slate-600 cursor-pointer"
               key={tag.id}>
               {tag.name}
             </li>
@@ -102,7 +102,6 @@ const TagsInput = () => {
             onChange={handleChange}
             placeholder="Enter tags separated by comma"
             className="text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block p-2.5 outline-none w-full"
-            required
             onFocus={() => results.length && setTagListIsHidden(false)}
             onKeyDown={handleKeyDown}
             onBlur={() => setHighlightIndex(0)}

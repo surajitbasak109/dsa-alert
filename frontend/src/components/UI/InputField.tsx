@@ -2,7 +2,7 @@ type InputFieldProps = {
   label: string;
   name: string;
   id: string;
-  type: 'text' | 'email' | 'number' | 'password' | 'tel';
+  type: 'text' | 'email' | 'number' | 'password' | 'tel' | 'url';
   placeholder: string;
   defaultValue?: string;
   required?: boolean;
