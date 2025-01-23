@@ -1,11 +1,8 @@
-import type { Post } from '@components/admin/PostTable/PostTableData';
+import { useAppState } from '@/store';
 import PostTableData from '@components/admin/PostTable/PostTableData';
 
-type Props = {
-  posts: Post[];
-};
-
-const PostTable = ({ posts }: Props) => {
+const PostTable = () => {
+  const { posts } = useAppState();
   return (
     <div className="relative overflow-x-auto shadow-md sm:rounded-lg">
       <table className="w-full text-sm text-left text-gray-500 rtl:text-right dark:text-gray-400">

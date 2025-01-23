@@ -1,25 +1,16 @@
 import PostForm from '@/components/admin/PostForm/PostForm';
 import PostTable from '@/components/admin/PostTable/PostTable';
-import { Post } from '@/components/admin/PostTable/PostTableData';
-import useGetQuery from '@/hooks/useGetQuery';
-import { SuccessResponse } from '@/types';
-import { useState } from 'react';
+import { useActions } from '@/store';
+import { useEffect, useState } from 'react';
 
 const Admin = () => {
   type mode = 'view' | 'create' | 'edit' | 'delete';
   const [mode, setMode] = useState<mode>('view');
-  const { isLoading, error, data } = useGetQuery<SuccessResponse<Post[]>>({
-    path: '/posts'
-  });
-  if (isLoading) return <div>Loading...</div>;
-  else if (error)
-    return (
-      <div>
-        There was an error.
-        <br />
-        <pre>{JSON.stringify(error, null, 2)}</pre>
-      </div>
-    );
+  const { getPosts } = useActions();
+  useEffect(() => {
+    getPosts();
+  }, [getPosts]);
+
   return (
     <div className="container px-4 mx-auto md:px-1 lg:px-0">
       <div className="flex items-center justify-end gap-3 my-4">
@@ -31,7 +22,7 @@ const Admin = () => {
           </button>
         )}
       </div>
-      {mode === 'view' && <PostTable posts={data?.data as Post[]} />}
+      {mode === 'view' && <PostTable />}
       {mode === 'create' && <PostForm onCancel={() => setMode('view')} />}
     </div>
   );

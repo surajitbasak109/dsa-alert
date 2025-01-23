@@ -15,3 +15,15 @@ export type SearchTag = {
   name: string;
   highlighted?: boolean;
 };
+
+export type Post = {
+  id: number;
+  title: string;
+  problemId: string;
+  link: string;
+  description: string;
+  difficulty: string;
+  platformId: number;
+  tags: string[];
+  platform: string;
+};

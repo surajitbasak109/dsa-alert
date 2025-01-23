@@ -1,14 +1,4 @@
-export type Post = {
-  id: number;
-  title: string;
-  problemId: string;
-  link: string;
-  description: string;
-  difficulty: string;
-  platformId: number;
-  tags: string[];
-  platform: string;
-};
+import { Post } from "@/types";
 
 const PostTableData = ({
   id,

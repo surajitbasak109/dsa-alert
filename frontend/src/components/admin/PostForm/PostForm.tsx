@@ -1,9 +1,10 @@
 import InputField from '@/components/UI/InputField';
 import useGetQuery from '@/hooks/useGetQuery';
 import { PlatformSelectProp, SuccessResponse } from '@/types';
-import { FormEvent } from 'react';
+import { FormEvent, useEffect } from 'react';
 import TagsInput from './TagsInput';
 import DescriptionEditor from './DescriptionEditor';
+import { useActions, useAppState } from '@/store';
 
 const difficulties = [
   {
@@ -25,19 +26,11 @@ type PostFormProp = {
 };
 
 const PostForm = ({ onCancel }: PostFormProp) => {
-  const {
-    isLoading,
-    error,
-    data: platformFetchData
-  } = useGetQuery<SuccessResponse<PlatformSelectProp[]>>({
-    path: '/platforms'
-  });
-  if (isLoading) return <h2>Loading...</h2>;
-  if (error) {
-    console.error(error);
-    return <h2>Error fetching Platform</h2>;
-  }
-  const platforms = platformFetchData?.data;
+  const { getPlatformSelectData } = useActions();
+  const { platformSelectData } = useAppState();
+  useEffect(() => {
+    getPlatformSelectData();
+  }, [getPlatformSelectData]);
   const handleSubmit = (e: FormEvent) => {
     e.preventDefault();
     const formData = new FormData(e.target as HTMLFormElement);
@@ -47,7 +40,7 @@ const PostForm = ({ onCancel }: PostFormProp) => {
     <form className="w-full mx-auto md:w-2/3" onSubmit={handleSubmit}>
       <h2 className="mb-3 text-xl font-bold">Create a new Post</h2>
       <InputField
-        label="title"
+        label="Title"
         id="title"
         name="title"
         type="text"
@@ -77,7 +70,7 @@ const PostForm = ({ onCancel }: PostFormProp) => {
             name="platformId"
             className="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500">
             <option>Select Platform</option>
-            {platforms?.map((platform) => (
+            {platformSelectData?.map((platform) => (
               <option value={platform.id} key={platform.id}>
                 {platform.name}
               </option>
