@@ -1,6 +1,4 @@
 import InputField from '@/components/UI/InputField';
-import useGetQuery from '@/hooks/useGetQuery';
-import { PlatformSelectProp, SuccessResponse } from '@/types';
 import { FormEvent, useEffect } from 'react';
 import TagsInput from './TagsInput';
 import DescriptionEditor from './DescriptionEditor';
@@ -37,7 +35,7 @@ const PostForm = ({ onCancel }: PostFormProp) => {
     console.log({ ...Object.fromEntries(formData) });
   };
   return (
-    <form className="w-full mx-auto md:w-2/3" onSubmit={handleSubmit}>
+    <form className="w-full pb-3 mx-auto md:w-2/3" onSubmit={handleSubmit}>
       <h2 className="mb-3 text-xl font-bold">Create a new Post</h2>
       <InputField
         label="Title"

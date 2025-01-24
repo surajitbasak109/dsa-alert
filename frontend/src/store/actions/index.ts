@@ -14,4 +14,13 @@ export const getPlatformSelectData = async ({ state, effects }: Context) => {
   state.platformSelectData = allPlatforms.data;
 };
 
+export const searchTags = async ({state, effects}: Context, value: string) => {
+  const allTags = await effects.api.searchTags(value);
+  state.searchTagsData = allTags.data;
+}
+
+export const setPostFormDescription = ({state}: Context, description: string) => {
+  state.postForm.description = description;
+}
+
 export { setIsEditorRead };

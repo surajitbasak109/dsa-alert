@@ -1,11 +1,18 @@
-import { PlatformSelectProp, Post } from '@/types';
+import { PlatformSelectProp, Post, SearchTag } from '@/types';
 
 const initialTheme = localStorage.getItem('themeMode') || 'dark';
 
 export type StoreState = {
   posts: Post[];
-  platformSelectData: PlatformSelectProp[],
+  platformSelectData: PlatformSelectProp[];
+  searchTagsData: SearchTag[];
+  postForm: {
+    description: string;
+    selectedTags: Omit<SearchTag, 'highlighted'>[],
+  },
   editor: {
+    defaultValue: string;
+    defaultLanguage: string;
     themeMode: string;
     isEditorReady: boolean;
     options: {
@@ -57,7 +64,6 @@ export type StoreState = {
       smoothScrolling: boolean;
       suggestOnTriggerCharacters: boolean;
       wordBasedSuggestions: boolean;
-      // eslint-disable-next-line
       wordSeparators: string;
       wordWrap: string;
       wordWrapBreakAfterCharacters: string;
@@ -67,6 +73,9 @@ export type StoreState = {
       wordWrapMinified: true;
       wrappingIndent: string;
       autoClosingOvertype: string;
+      minimap: {
+        enabled: boolean;
+      };
     };
     monacoTheme: string;
   };
@@ -74,7 +83,15 @@ export type StoreState = {
 
 const initialState: StoreState = {
   posts: [],
+  searchTagsData: [],
+  platformSelectData: [],
+  postForm: {
+    description: "",
+    selectedTags: [],
+  },
   editor: {
+    defaultValue: '# Problem Heading',
+    defaultLanguage: 'markdown',
     themeMode: initialTheme,
     isEditorReady: false,
     options: {
@@ -135,7 +152,10 @@ const initialState: StoreState = {
       wordWrapColumn: 80,
       wordWrapMinified: true,
       wrappingIndent: 'none',
-      autoClosingOvertype: 'always'
+      autoClosingOvertype: 'always',
+      minimap: {
+        enabled: false
+      }
     },
     monacoTheme: initialTheme
   }

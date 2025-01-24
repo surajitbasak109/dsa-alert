@@ -1,13 +1,14 @@
 import { useClickAway } from '@/hooks/useClickAway';
 import useDebounce from '@/hooks/useDebounce';
+import { useActions, useAppState } from '@/store';
 import { SearchTag } from '@/types';
-import searchTags from '@/utils/searchTags';
 import clsx from 'clsx';
 import { FormEvent, KeyboardEvent, useEffect, useState } from 'react';
 
 const TagsInput = () => {
+  const {searchTags} = useActions()
+  const {searchTagsData} = useAppState()
   const [searchTerm, setSearchTerm] = useState<string>('');
-  const [results, setResults] = useState<SearchTag[]>([]);
   const [isSearching, setIsSearching] = useState<boolean>(false);
   const debouncedSearchTerm = useDebounce(searchTerm, 300);
   const [selectedTags, setSelectedTags] = useState<
@@ -26,7 +27,7 @@ const TagsInput = () => {
   const processSelectedTag = (id: number) => {
     const tag = selectedTags.find((selectedTag) => selectedTag.id == id);
     if (!tag) {
-      const resultTag = results.find((result) => result.id === id);
+      const resultTag = searchTagsData.find((result) => result.id === id);
       if (resultTag) {
         setSelectedTags([...selectedTags, resultTag]);
       }
@@ -46,32 +47,31 @@ const TagsInput = () => {
     if (e.code === 'ArrowUp') {
       setHighlightIndex((prev) => Math.max(0, prev - 1));
     } else if (e.code === 'ArrowDown') {
-      setHighlightIndex((prev) => Math.min(results.length - 1, prev + 1));
+      setHighlightIndex((prev) => Math.min(searchTagsData.length - 1, prev + 1));
     } else if (e.code === 'Enter') {
       e.preventDefault();
-      processSelectedTag(results[highlightIndex].id);
+      processSelectedTag(searchTagsData[highlightIndex].id);
     }
   };
 
   useEffect(() => {
     const searchTag = async () => {
-      let results: SearchTag[] = [];
       setIsSearching(true);
       if (debouncedSearchTerm) {
         setHighlightIndex(0);
-        const data = await searchTags(debouncedSearchTerm);
-        results = data || [];
+        searchTags(debouncedSearchTerm);
       } else {
         setTagListIsHidden(true);
       }
       setIsSearching(false);
-      setResults(results);
-      if (results.length) {
-        setTagListIsHidden(false);
-      }
     };
     searchTag();
-  }, [debouncedSearchTerm]);
+  }, [debouncedSearchTerm, searchTags]);
+  useEffect(() => {
+    if (searchTagsData.length) {
+      setTagListIsHidden(false);
+    }
+  }, [searchTagsData]);
   return (
     <fieldset className="mb-5" ref={tagsInputRef}>
       <label
@@ -102,20 +102,20 @@ const TagsInput = () => {
             onChange={handleChange}
             placeholder="Enter tags separated by comma"
             className="text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block p-2.5 outline-none w-full"
-            onFocus={() => results.length && setTagListIsHidden(false)}
+            onFocus={() => searchTagsData.length && setTagListIsHidden(false)}
             onKeyDown={handleKeyDown}
-            onBlur={() => setHighlightIndex(0)}
+            onBlur={() => setHighlightIndex(-1)}
             autoComplete="off"
           />
           <ul
             className={clsx(
-              'sticky left-0 z-10 flex flex-col items-start justify-start w-full gap-1 bg-white top-[50px] max-h-60 overflow-y-auto shadow-md',
+              'sticky left-0 z-10 flex flex-col items-start justify-start w-full gap-1 bg-white top-[50px] max-h-[55vh] overflow-y-auto shadow-md',
               tagListIsHidden && 'hidden'
             )}>
-            {results.map(({ name, id }, index) => (
+            {searchTagsData.map(({ name, id }, index) => (
               <li
                 className={clsx(
-                  'block w-full px-2 py-2 cursor-pointer',
+                  'block w-full p-1 text-xs cursor-pointer',
                   selectedTags.find((tag) => tag.id === id) && 'bg-orange-100',
                   index === highlightIndex && 'bg-yellow-200'
                 )}
