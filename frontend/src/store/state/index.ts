@@ -1,4 +1,5 @@
 import { PlatformSelectProp, Post, SearchTag } from '@/types';
+import { type editor as MonacoEditorType } from 'monaco-editor';
 
 const initialTheme = localStorage.getItem('themeMode') || 'dark';
 
@@ -8,75 +9,14 @@ export type StoreState = {
   searchTagsData: SearchTag[];
   postForm: {
     description: string;
-    selectedTags: Omit<SearchTag, 'highlighted'>[],
-  },
+    selectedTags: Omit<SearchTag, 'highlighted'>[];
+  };
   editor: {
     defaultValue: string;
     defaultLanguage: string;
     themeMode: string;
     isEditorReady: boolean;
-    options: {
-      acceptSuggestionOnCommitCharacter: boolean;
-      acceptSuggestionOnEnter: string;
-      accessibilitySupport: string;
-      autoIndent: boolean;
-      automaticLayout: boolean;
-      codeLens: boolean;
-      colorDecorators: boolean;
-      contextmenu: boolean;
-      cursorBlinking: string;
-      cursorSmoothCaretAnimation: boolean;
-      cursorStyle: string;
-      disableLayerHinting: boolean;
-      disableMonospaceOptimizations: boolean;
-      dragAndDrop: boolean;
-      fixedOverflowWidgets: boolean;
-      folding: boolean;
-      foldingStrategy: string;
-      fontLigatures: boolean;
-      formatOnPaste: boolean;
-      formatOnType: boolean;
-      hideCursorInOverviewRuler: boolean;
-      highlightActiveIndentGuide: boolean;
-      links: boolean;
-      mouseWheelZoom: boolean;
-      multiCursorMergeOverlapping: boolean;
-      multiCursorModifier: string;
-      overviewRulerBorder: boolean;
-      overviewRulerLanes: number;
-      quickSuggestions: boolean;
-      quickSuggestionsDelay: number;
-      readOnly: boolean;
-      renderControlCharacters: boolean;
-      renderFinalNewline: string;
-      renderIndentGuides: boolean;
-      renderLineHighlight: string;
-      renderWhitespace: string;
-      revealHorizontalRightPadding: 30;
-      roundedSelection: boolean;
-      rulers: [];
-      scrollBeyondLastColumn: number;
-      scrollBeyondLastLine: boolean;
-      selectOnLineNumbers: boolean;
-      selectionClipboard: boolean;
-      selectionHighlight: boolean;
-      showFoldingControls: string;
-      smoothScrolling: boolean;
-      suggestOnTriggerCharacters: boolean;
-      wordBasedSuggestions: boolean;
-      wordSeparators: string;
-      wordWrap: string;
-      wordWrapBreakAfterCharacters: string;
-      wordWrapBreakBeforeCharacters: string;
-      wordWrapBreakObtrusiveCharacters: string;
-      wordWrapColumn: number;
-      wordWrapMinified: true;
-      wrappingIndent: string;
-      autoClosingOvertype: string;
-      minimap: {
-        enabled: boolean;
-      };
-    };
+    options: MonacoEditorType.IStandaloneEditorConstructionOptions;
     monacoTheme: string;
   };
 };
@@ -86,8 +26,8 @@ const initialState: StoreState = {
   searchTagsData: [],
   platformSelectData: [],
   postForm: {
-    description: "",
-    selectedTags: [],
+    description: '',
+    selectedTags: []
   },
   editor: {
     defaultValue: '# Problem Heading',
@@ -98,13 +38,13 @@ const initialState: StoreState = {
       acceptSuggestionOnCommitCharacter: true,
       acceptSuggestionOnEnter: 'on',
       accessibilitySupport: 'auto',
-      autoIndent: false,
+      autoIndent: 'advanced',
       automaticLayout: true,
       codeLens: true,
       colorDecorators: true,
       contextmenu: true,
       cursorBlinking: 'blink',
-      cursorSmoothCaretAnimation: false,
+      cursorSmoothCaretAnimation: 'off',
       cursorStyle: 'line',
       disableLayerHinting: false,
       disableMonospaceOptimizations: false,
@@ -116,7 +56,6 @@ const initialState: StoreState = {
       formatOnPaste: true,
       formatOnType: false,
       hideCursorInOverviewRuler: false,
-      highlightActiveIndentGuide: true,
       links: true,
       mouseWheelZoom: false,
       multiCursorMergeOverlapping: true,
@@ -128,7 +67,6 @@ const initialState: StoreState = {
       readOnly: false,
       renderControlCharacters: false,
       renderFinalNewline: 'on',
-      renderIndentGuides: true,
       renderLineHighlight: 'all',
       renderWhitespace: 'none',
       revealHorizontalRightPadding: 30,
@@ -142,15 +80,13 @@ const initialState: StoreState = {
       showFoldingControls: 'mouseover',
       smoothScrolling: false,
       suggestOnTriggerCharacters: true,
-      wordBasedSuggestions: true,
+      wordBasedSuggestions: 'currentDocument',
       // eslint-disable-next-line
       wordSeparators: `~!@#$%^&*()-=+[{]}\|;:'",.<>/?`,
       wordWrap: 'off',
       wordWrapBreakAfterCharacters: '\t})]?|&,;',
       wordWrapBreakBeforeCharacters: '{([+',
-      wordWrapBreakObtrusiveCharacters: '.',
       wordWrapColumn: 80,
-      wordWrapMinified: true,
       wrappingIndent: 'none',
       autoClosingOvertype: 'always',
       minimap: {

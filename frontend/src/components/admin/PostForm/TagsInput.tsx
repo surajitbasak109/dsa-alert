@@ -5,9 +5,13 @@ import { SearchTag } from '@/types';
 import clsx from 'clsx';
 import { FormEvent, KeyboardEvent, useEffect, useState } from 'react';
 
-const TagsInput = () => {
-  const {searchTags} = useActions()
-  const {searchTagsData} = useAppState()
+type TagsInputProps = {
+  onChange: (selectedTags: SearchTag[]) => void;
+};
+
+const TagsInput = ({ onChange }: TagsInputProps) => {
+  const { searchTags } = useActions();
+  const { searchTagsData } = useAppState();
   const [searchTerm, setSearchTerm] = useState<string>('');
   const [isSearching, setIsSearching] = useState<boolean>(false);
   const debouncedSearchTerm = useDebounce(searchTerm, 300);
@@ -47,10 +51,18 @@ const TagsInput = () => {
     if (e.code === 'ArrowUp') {
       setHighlightIndex((prev) => Math.max(0, prev - 1));
     } else if (e.code === 'ArrowDown') {
-      setHighlightIndex((prev) => Math.min(searchTagsData.length - 1, prev + 1));
+      setHighlightIndex((prev) =>
+        Math.min(searchTagsData.length - 1, prev + 1)
+      );
     } else if (e.code === 'Enter') {
       e.preventDefault();
       processSelectedTag(searchTagsData[highlightIndex].id);
+    } else if (
+      e.code === 'Backspace' &&
+      searchTerm.length === 0 &&
+      selectedTags.length > 0
+    ) {
+      setSelectedTags(selectedTags.slice(0, -1));
     }
   };
 
@@ -72,6 +84,9 @@ const TagsInput = () => {
       setTagListIsHidden(false);
     }
   }, [searchTagsData]);
+  useEffect(() => {
+    onChange(selectedTags);
+  }, [selectedTags, onChange]);
   return (
     <fieldset className="mb-5" ref={tagsInputRef}>
       <label
@@ -88,7 +103,7 @@ const TagsInput = () => {
           {selectedTags.map((tag) => (
             <li
               onClick={() => deleteSelectedTag(tag.id)}
-              className="text-[12px] p-1 text-center text-white rounded-md bg-slate-600 cursor-pointer"
+              className="text-[12px] px-3 py-1 text-center text-white rounded-md bg-slate-600 cursor-pointer"
               key={tag.id}>
               {tag.name}
             </li>
@@ -109,7 +124,7 @@ const TagsInput = () => {
           />
           <ul
             className={clsx(
-              'sticky left-0 z-10 flex flex-col items-start justify-start w-full gap-1 bg-white top-[50px] max-h-[55vh] overflow-y-auto shadow-md',
+              'sticky left-0 z-10 flex flex-col items-start justify-start w-full gap-1 bg-white top-[50px] h-auto overflow-y-auto shadow-md',
               tagListIsHidden && 'hidden'
             )}>
             {searchTagsData.map(({ name, id }, index) => (

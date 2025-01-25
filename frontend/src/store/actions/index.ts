@@ -1,6 +1,7 @@
 import { Context } from '@/store';
+import { SearchTag } from '@/types';
 
-const setIsEditorRead = ({ state }: Context, isReady: boolean) => {
+export const setIsEditorReady = ({ state }: Context, isReady: boolean) => {
   state.editor.isEditorReady = isReady;
 };
 
@@ -14,13 +15,22 @@ export const getPlatformSelectData = async ({ state, effects }: Context) => {
   state.platformSelectData = allPlatforms.data;
 };
 
-export const searchTags = async ({state, effects}: Context, value: string) => {
+export const searchTags = async (
+  { state, effects }: Context,
+  value: string
+) => {
   const allTags = await effects.api.searchTags(value);
   state.searchTagsData = allTags.data;
-}
+};
 
-export const setPostFormDescription = ({state}: Context, description: string) => {
-  state.postForm.description = description;
-}
-
-export { setIsEditorRead };
+export const postForm = {
+  setDescription: ({ state }: Context, description: string) => {
+    state.postForm.description = description;
+  },
+  setSelectedTags: (
+    { state }: Context,
+    selectedTags: Omit<SearchTag, 'highlighted'>[]
+  ) => {
+    state.postForm.selectedTags = selectedTags;
+  }
+};

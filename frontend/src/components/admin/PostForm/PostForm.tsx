@@ -24,7 +24,7 @@ type PostFormProp = {
 };
 
 const PostForm = ({ onCancel }: PostFormProp) => {
-  const { getPlatformSelectData } = useActions();
+  const { getPlatformSelectData, postForm } = useActions();
   const { platformSelectData } = useAppState();
   useEffect(() => {
     getPlatformSelectData();
@@ -95,7 +95,9 @@ const PostForm = ({ onCancel }: PostFormProp) => {
         </fieldset>
       </div>
 
-      <TagsInput />
+      <TagsInput
+        onChange={(selectedTags) => postForm.setSelectedTags(selectedTags)}
+      />
 
       <InputField
         type="url"
