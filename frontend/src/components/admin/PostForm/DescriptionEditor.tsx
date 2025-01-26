@@ -1,6 +1,6 @@
 import { useActions, useAppState } from '@/store';
 import Editor, { type Monaco } from '@monaco-editor/react';
-import { editor as MonacoEditorType } from 'monaco-editor';
+import { type editor as MonacoEditorType } from 'monaco-editor';
 import { useRef } from 'react';
 import EditorButtons from './EditorButtons';
 
@@ -13,6 +13,23 @@ const DescriptionEditor = () => {
   const handleOnEditorChange = (value: string | undefined) => {
     if (value) {
       postForm.setDescription(value);
+    }
+  };
+
+  const onEditorButtonClick = (key: string) => {
+    switch (key) {
+      case 'bold':
+      case 'italic':
+        applyFormatting(key, true);
+        break;
+      case 'unordered-list':
+      case 'ordered-list':
+      case 'quote':
+        applyListFormatting(key, true);
+        break;
+      default:
+        applyFormatting(key, true);
+        break;
     }
   };
 
@@ -31,16 +48,23 @@ const DescriptionEditor = () => {
       case 'italic':
         char = '*';
         break;
+      case 'link':
+        char = '()[]';
+        break;
       default:
         char = '*';
         break;
     }
 
     if (selectedText) {
+      let text = `${char}${selectedText}${char}`;
+      if (key == 'link') {
+        text = `(${selectedText})[]`;
+      }
       editor.executeEdits('', [
         {
           range: selection!,
-          text: `${char}${selectedText}${char}`,
+          text,
           forceMoveMarkers: true
         }
       ]);
@@ -53,10 +77,14 @@ const DescriptionEditor = () => {
           position.lineNumber,
           position.column
         );
+        let text = `${char}${char}`;
+        if (key == 'link') {
+          text = `()[]`;
+        }
         editor.executeEdits('', [
           {
             range,
-            text: `${char}${char}`,
+            text,
             forceMoveMarkers: true
           }
         ]);
@@ -76,6 +104,64 @@ const DescriptionEditor = () => {
     }
   };
 
+  const applyListFormatting = (key: string, focus = false) => {
+    console.log({ key });
+    const editor = editorRef.current;
+    const monaco = monacoRef.current;
+    if (!editor || !monaco) return;
+    const selection = editor.getSelection();
+    if (!selection) return; // Ensures selection is not null or undefined
+
+    const model = editor.getModel();
+    if (!model) return; // Ensures model is not null
+    let char = '#';
+    switch (key) {
+      case 'ordered-list':
+        char = '1. ';
+        break;
+      case 'unordered-list':
+        char = '- ';
+        break;
+      case 'quote':
+        char = '> ';
+        break;
+    }
+
+    const start = selection.startLineNumber;
+    const end = selection.endLineNumber;
+
+    const isRangeEmpty = selection.isEmpty();
+    const linesContent: string[] = [];
+
+    for (let i = start; i <= end; i++) {
+      linesContent.push(model.getLineContent(i));
+    }
+
+    const allStartWithHyphen = linesContent.every((line) =>
+      line.startsWith(char)
+    );
+    const range = new monaco.Range(start, 1, end, model.getLineMaxColumn(end));
+
+    let newContent: string;
+    if (isRangeEmpty) {
+      // Handle no selection - single line toggle
+      newContent = linesContent[0].startsWith(char)
+        ? linesContent[0].slice(char.length)
+        : char + linesContent[0];
+    } else if (allStartWithHyphen) {
+      newContent = linesContent
+        .map((line) => line.slice(char.length))
+        .join('\n');
+    } else {
+      newContent = linesContent.map((line) => char + line).join('\n');
+    }
+
+    editor.executeEdits('', [{ range, text: newContent }]);
+    if (focus) {
+      editor.focus();
+    }
+  };
+
   const handleOnEditorMount = (
     editor: MonacoEditorType.IStandaloneCodeEditor,
     monaco: Monaco
@@ -90,10 +176,12 @@ const DescriptionEditor = () => {
     editor.addCommand(monaco.KeyMod.CtrlCmd | monaco.KeyCode.KeyI, () =>
       applyFormatting('italic')
     );
-  };
-
-  const onEditorButtonClick = (key: string) => {
-    applyFormatting(key, true);
+    editor.addCommand(monaco.KeyMod.CtrlCmd | monaco.KeyCode.KeyU, () =>
+      applyListFormatting('unordered-list')
+    );
+    editor.addCommand(monaco.KeyMod.CtrlCmd | monaco.KeyCode.KeyO, () =>
+      applyListFormatting('ordered-list')
+    );
   };
 
   return (
