@@ -35,7 +35,7 @@ const PostForm = ({ onCancel }: PostFormProp) => {
     console.log({ ...Object.fromEntries(formData) });
   };
   return (
-    <form className="w-full pb-3 mx-auto md:w-2/3" onSubmit={handleSubmit}>
+    <form className="w-full pb-3 mx-auto md:max-w-7xl" onSubmit={handleSubmit}>
       <h2 className="mb-3 text-xl font-bold">Create a new Post</h2>
       <InputField
         label="Title"

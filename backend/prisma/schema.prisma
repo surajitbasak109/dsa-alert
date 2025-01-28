@@ -37,8 +37,6 @@ model Post {
   problemId   String        @db.VarChar(100)
   link        String        @db.VarChar(200)
   description String        @db.Text
-  examples    String?       @db.Text
-  constraints String?       @db.Text
   difficulty  Int
   platform    Platform      @relation(fields: [platformId], references: [id])
   platformId  Int

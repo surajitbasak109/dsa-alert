@@ -26,7 +26,7 @@ const initialState: StoreState = {
   searchTagsData: [],
   platformSelectData: [],
   postForm: {
-    description: '',
+    description: '# Problem Heading',
     selectedTags: []
   },
   editor: {
@@ -83,7 +83,7 @@ const initialState: StoreState = {
       wordBasedSuggestions: 'currentDocument',
       // eslint-disable-next-line
       wordSeparators: `~!@#$%^&*()-=+[{]}\|;:'",.<>/?`,
-      wordWrap: 'off',
+      wordWrap: 'on',
       wordWrapBreakAfterCharacters: '\t})]?|&,;',
       wordWrapBreakBeforeCharacters: '{([+',
       wordWrapColumn: 80,
@@ -91,6 +91,9 @@ const initialState: StoreState = {
       autoClosingOvertype: 'always',
       minimap: {
         enabled: false
+      },
+      scrollbar: {
+        verticalSliderSize: 5,
       }
     },
     monacoTheme: initialTheme

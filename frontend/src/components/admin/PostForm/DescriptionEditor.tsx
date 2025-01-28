@@ -1,14 +1,18 @@
 import { useActions, useAppState } from '@/store';
 import Editor, { type Monaco } from '@monaco-editor/react';
 import { type editor as MonacoEditorType } from 'monaco-editor';
-import { useRef } from 'react';
+import { useRef, useState } from 'react';
 import EditorButtons from './EditorButtons';
+import ReactMarkdown from 'react-markdown';
+import clsx from 'clsx';
 
 const DescriptionEditor = () => {
   const editorRef = useRef<null | MonacoEditorType.IStandaloneCodeEditor>(null);
   const monacoRef = useRef<null | Monaco>(null);
   const { postForm } = useActions();
-  const { editor } = useAppState();
+  const { editor, postForm: postFormState } = useAppState();
+  const [markdownPreviewVisible, setMarkdownPreviewVisible] =
+    useState<boolean>(true);
 
   const handleOnEditorChange = (value: string | undefined) => {
     if (value) {
@@ -26,6 +30,9 @@ const DescriptionEditor = () => {
       case 'ordered-list':
       case 'quote':
         applyListFormatting(key, true);
+        break;
+      case 'preview':
+        setMarkdownPreviewVisible((prev) => !prev);
         break;
       default:
         applyFormatting(key, true);
@@ -189,15 +196,33 @@ const DescriptionEditor = () => {
       <h3 className="mb-2 text-lg font-bold">Description</h3>
       <div className="border border-gray-300">
         <EditorButtons onClick={onEditorButtonClick} />
-        <Editor
-          defaultValue={editor.defaultValue}
-          defaultLanguage={editor.defaultLanguage}
-          height="40vh"
-          options={editor.options}
-          theme="vs-light"
-          onChange={handleOnEditorChange}
-          onMount={handleOnEditorMount}
-        />
+        <div className="flex min-h-0 grow">
+          <div className="flex flex-col flex-1 overflow-hidden rounded-b">
+            <div className="border-t border-[#0000000d] dark:border-dark-divider-3 grow">
+              <div className="w-full h-full">
+                <Editor
+                  defaultValue={editor.defaultValue}
+                  defaultLanguage={editor.defaultLanguage}
+                  height="40vh"
+                  options={editor.options}
+                  theme="vs-light"
+                  onChange={handleOnEditorChange}
+                  onMount={handleOnEditorMount}
+                />
+              </div>
+            </div>
+          </div>
+          <div
+            className={clsx(
+              'flex-1 hidden px-6 pt-4 pb-2 overflow-auto border-t border-l border-[#0000000d]',
+              markdownPreviewVisible && 'md:block'
+            )}>
+            <ReactMarkdown
+              className="prose markdown"
+              children={postFormState.description}
+            />
+          </div>
+        </div>
       </div>
     </div>
   );
