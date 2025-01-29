@@ -38,6 +38,15 @@ const PostTable = () => {
           </tr>
         </thead>
         <tbody>
+          {!posts.length && (
+            <tr className="border-b odd:bg-white odd:dark:bg-gray-900 even:bg-gray-50 even:dark:bg-gray-800 dark:border-gray-700">
+              <td
+                className="px-6 py-4 font-medium text-center text-gray-900 whitespace-nowrap dark:text-white"
+                colSpan={7}>
+                No Records
+              </td>
+            </tr>
+          )}
           {posts.map((post) => (
             <PostTableData key={post.id} {...post} />
           ))}

@@ -6,14 +6,14 @@ export function sendSuccessResponse(
   code = 200,
   message = 'Success'
 ) {
-  return res
-    .json({
-      data,
-      code,
-      message,
-      timestamp: new Date()
-    })
-    .status(code);
+  const status = true;
+  return res.status(code).json({
+    status,
+    data,
+    code,
+    message,
+    timestamp: new Date().toISOString()
+  });
 }
 
 export function sendErrorResponse(
@@ -22,12 +22,12 @@ export function sendErrorResponse(
   code = 500,
   message = 'Error'
 ) {
-  return res
-    .json({
-      error,
-      code,
-      message,
-      timestamp: new Date()
-    })
-    .status(code);
+  const status = false;
+  return res.status(code).json({
+    status,
+    error,
+    code,
+    message,
+    timestamp: new Date().toISOString()
+  });
 }

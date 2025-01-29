@@ -9,14 +9,14 @@ import clsx from 'clsx';
 const DescriptionEditor = () => {
   const editorRef = useRef<null | MonacoEditorType.IStandaloneCodeEditor>(null);
   const monacoRef = useRef<null | Monaco>(null);
-  const { postForm } = useActions();
-  const { editor, postForm: postFormState } = useAppState();
+  const { postFormAction } = useActions();
+  const { editor, postForm } = useAppState();
   const [markdownPreviewVisible, setMarkdownPreviewVisible] =
     useState<boolean>(true);
 
   const handleOnEditorChange = (value: string | undefined) => {
     if (value) {
-      postForm.setDescription(value);
+      postFormAction.setDescription(value);
     }
   };
 
@@ -203,7 +203,6 @@ const DescriptionEditor = () => {
                 <Editor
                   defaultValue={editor.defaultValue}
                   defaultLanguage={editor.defaultLanguage}
-                  height="40vh"
                   options={editor.options}
                   theme="vs-light"
                   onChange={handleOnEditorChange}
@@ -214,12 +213,12 @@ const DescriptionEditor = () => {
           </div>
           <div
             className={clsx(
-              'flex-1 hidden px-6 pt-4 pb-2 overflow-auto border-t border-l border-[#0000000d]',
+              'flex-1 hidden px-6 pt-4 pb-2 overflow-auto border-t border-l border-[#0000000d] min-h-[50vh]',
               markdownPreviewVisible && 'md:block'
             )}>
             <ReactMarkdown
               className="prose markdown"
-              children={postFormState.description}
+              children={postForm.description}
             />
           </div>
         </div>

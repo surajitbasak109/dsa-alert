@@ -34,7 +34,8 @@ export default class PostController {
     try {
       const { tags, ...postParam }: PostParam & { tags: number[] } = req.body;
       const createdData = await createPost(postParam, tags);
-      sendSuccessResponse(res, createdData, 200, `Post created successfully.`);
+      const post = await getPost(createdData.id);
+      sendSuccessResponse(res, post, 200, `Post created successfully.`);
     } catch (error) {
       sendErrorResponse(res, error?.toString(), 500, 'Server error');
     }

@@ -119,7 +119,10 @@ const TagsInput = ({ onChange }: TagsInputProps) => {
             className="text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block p-2.5 outline-none w-full"
             onFocus={() => searchTagsData.length && setTagListIsHidden(false)}
             onKeyDown={handleKeyDown}
-            onBlur={() => setHighlightIndex(-1)}
+            onBlur={() => {
+              setHighlightIndex(-1);
+              setTagListIsHidden(true);
+            }}
             autoComplete="off"
           />
           <ul

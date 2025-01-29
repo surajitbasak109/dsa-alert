@@ -8,6 +8,7 @@ type InputFieldProps = {
   required?: boolean;
   inputClassName?: string;
   wrapperClassName?: string;
+  onChange?: (e: React.ChangeEvent<HTMLInputElement>) => void;
 };
 
 const InputField: React.FC<InputFieldProps> = ({
@@ -19,7 +20,8 @@ const InputField: React.FC<InputFieldProps> = ({
   defaultValue = '',
   required = false,
   inputClassName = '',
-  wrapperClassName = ''
+  wrapperClassName = '',
+  onChange = () => {}
 }) => {
   inputClassName = `text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 bg-gray-50 border border-gray-30 ${inputClassName}`;
   wrapperClassName = `mb-5 ${wrapperClassName}`;
@@ -38,6 +40,7 @@ const InputField: React.FC<InputFieldProps> = ({
         placeholder={placeholder}
         className={inputClassName}
         required={required}
+        onChange={onChange}
       />
     </fieldset>
   );

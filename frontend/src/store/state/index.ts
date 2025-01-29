@@ -1,4 +1,4 @@
-import { PlatformSelectProp, Post, SearchTag } from '@/types';
+import { ApiErrorResponse, PlatformSelectProp, Post, SearchTag } from '@/types';
 import { type editor as MonacoEditorType } from 'monaco-editor';
 
 const initialTheme = localStorage.getItem('themeMode') || 'dark';
@@ -8,9 +8,16 @@ export type StoreState = {
   platformSelectData: PlatformSelectProp[];
   searchTagsData: SearchTag[];
   postForm: {
+    title: string;
+    problemId: string;
+    platformId: number;
+    difficulty: number;
+    link: string;
     description: string;
+    tags: number[];
     selectedTags: Omit<SearchTag, 'highlighted'>[];
   };
+  apiErrors: null | ApiErrorResponse;
   editor: {
     defaultValue: string;
     defaultLanguage: string;
@@ -26,9 +33,16 @@ const initialState: StoreState = {
   searchTagsData: [],
   platformSelectData: [],
   postForm: {
+    title: '',
+    platformId: 1,
+    problemId: '',
+    difficulty: 1,
+    link: '',
+    tags: [],
     description: '# Problem Heading',
     selectedTags: []
   },
+  apiErrors: null,
   editor: {
     defaultValue: '# Problem Heading',
     defaultLanguage: 'markdown',
@@ -93,7 +107,7 @@ const initialState: StoreState = {
         enabled: false
       },
       scrollbar: {
-        verticalSliderSize: 5,
+        verticalSliderSize: 5
       }
     },
     monacoTheme: initialTheme
