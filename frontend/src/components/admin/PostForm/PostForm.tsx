@@ -48,7 +48,7 @@ const PostForm = ({ onCancel }: PostFormProp) => {
   };
   return (
     <form
-      className="relative w-full pb-3 mx-auto md:max-w-7xl"
+      className="relative w-full px-4 py-3 mx-auto mb-3 bg-white shadow-md md:max-w-7xl sm:rounded-lg"
       onSubmit={handleSubmit}>
       <h2 className="mb-3 text-xl font-bold">Create a new Post</h2>
       {apiErrors && (

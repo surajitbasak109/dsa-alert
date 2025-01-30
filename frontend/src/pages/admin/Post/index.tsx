@@ -3,7 +3,7 @@ import PostTable from '@/components/admin/PostTable/PostTable';
 import { useActions } from '@/store';
 import { useEffect, useState } from 'react';
 
-const Admin = () => {
+const Post = () => {
   type mode = 'view' | 'create' | 'edit' | 'delete';
   const [mode, setMode] = useState<mode>('view');
   const { getPosts } = useActions();
@@ -28,4 +28,4 @@ const Admin = () => {
   );
 };
 
-export default Admin;
+export default Post;

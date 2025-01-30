@@ -2,211 +2,278 @@
 @tailwind components;
 @tailwind utilities;
 
+/* Layout */
+.dsa-root {
+  display: grid;
+  grid-template-areas:
+    'toolbar toolbar toolbar toolbar toolbar toolbar toolbar'
+    'navigation.notifications.sideSplitPanel tools global-tools'
+    'navigation.main.sideSplitPanel tools global-tools';
+  grid-template-columns:
+    min-content minmax(24px, 1fr) minmax(0, 1620px) minmax(24px, 1fr)
+    min-content min-content;
+  grid-template-rows: min-content min-content 1fr min-content;
+}
+
+.dsa-toolbar {
+  grid-area: toolbar;
+}
+
+.dsa-navigation {
+  grid-area: navigation;
+  inset-block-end: 0;
+  inline-size: 280px;
+  border-inline-end: 1px solid #b4b4bb;
+  grid-row: 1 / -1;
+  z-index: 830;
+  background: white;
+  opacity: 1;
+}
+
+.dsa-navigation-container {
+  z-index: 830;
+  background-color: white;
+  word-wrap: break-word;
+  pointer-events: auto;
+  display: flex;
+  position: sticky;
+  flex-direction: column;
+  inset-block-end: 0;
+  overflow-x: hidden;
+  transition: 165ms;
+  transition-property: border-color, opacity, inline-size, inset-inline-start;
+}
+
+@media (max-width: 780px) {
+    .dsa-navigation {
+        inline-size: 0;
+        border-inline-end: 0;
+    }
+}
+
+.dsa-navigation-container > .dsa-navigation-content {
+    overscroll-behavior-y: contain;
+    block-size: 100%;
+    inline-size: 280px;
+    flex-grow: 1;
+    position: relative;
+    overflow-y: auto;
+}
+
+.inline-size-0 {
+  inline-size: 0;
+}
+
+.dsa-main {
+  grid-area: main;
+}
+
+/* Markdown */
 .markdown {
-    word-break: normal;
-    overflow-wrap: break-word;
+  word-break: normal;
+  overflow-wrap: break-word;
 }
 
 .markdown img,
 .markdown video {
-    @apply mb-4;
+  @apply mb-4;
 }
 
-.markdown>*:last-child {
-    margin-bottom: 0;
+.markdown > *:last-child {
+  margin-bottom: 0;
 }
 
-.markdown>*:first-child {
-    margin-top: 0;
+.markdown > *:first-child {
+  margin-top: 0;
 }
 
-.markdown>div:first-child {
-    margin-top: 5px;
+.markdown > div:first-child {
+  margin-top: 5px;
 }
 
 .markdown iframe {
-    max-width: 100%;
-    @apply mb-4;
+  max-width: 100%;
+  @apply mb-4;
 }
 
 .markdown h1 {
-    @apply mt-6 mb-4 text-2xl font-bold;
+  @apply mt-6 mb-4 text-2xl font-bold;
 }
 
 .markdown h2 {
-    @apply mt-6 mb-4 text-xl font-bold;
+  @apply mt-6 mb-4 text-xl font-bold;
 }
 
 .markdown h3 {
-    @apply mt-6 mb-4 text-lg font-bold;
+  @apply mt-6 mb-4 text-lg font-bold;
 }
 
 .markdown h4 {
-    @apply mb-4 mt-6 text-[17px] font-bold;
+  @apply mb-4 mt-6 text-[17px] font-bold;
 }
 
 .markdown h5 {
-    @apply mt-6 mb-4 text-base font-bold;
+  @apply mt-6 mb-4 text-base font-bold;
 }
 
 .markdown h6 {
-    @apply mt-6 mb-4 text-base;
+  @apply mt-6 mb-4 text-base;
 }
 
 .markdown p {
-    @apply mb-4 overflow-x-auto overflow-y-hidden text-sm leading-[22px];
+  @apply mb-4 overflow-x-auto overflow-y-hidden text-sm leading-[22px];
 }
 
 .markdown p:first-child {
-    @apply mt-0;
+  @apply mt-0;
 }
 
 .markdown a {
-    @apply mb-4 text-blue-700;
+  @apply mb-4 text-blue-700;
 }
 
 .markdown a:hover {
-    @apply underline;
+  @apply underline;
 }
 
 :global(.dark) .markdown a {
-    @apply text-blue-900;
+  @apply text-blue-900;
 }
 
 .markdown strong {
-    @apply font-bold;
+  @apply font-bold;
 }
 
 .markdown blockquote {
-    @apply border-gray-300 mb-4 border-l-[6px];
+  @apply border-gray-300 mb-4 border-l-[6px];
 }
 
-.markdown blockquote>* {
-    @apply ml-4;
+.markdown blockquote > * {
+  @apply ml-4;
 }
 
 .markdown hr {
-    @apply my-6 border-b-2;
+  @apply my-6 border-b-2;
 }
 
 .markdown ins,
 .markdown u {
-    @apply underline;
+  @apply underline;
 }
 
 .markdown ul {
-    @apply mb-4 text-base list-disc;
+  @apply mb-4 text-base list-disc;
 }
 
 .markdown ul ul,
 .markdown ol ol {
-    @apply mt-1 mb-0;
+  @apply mt-1 mb-0;
 }
 
 .markdown ul ul {
-    list-style-type: circle;
+  list-style-type: circle;
 }
 
 .markdown ol ol {
-    list-style-type: lower-alpha;
+  list-style-type: lower-alpha;
 }
 
 .markdown li {
-    @apply mb-1 ml-8;
+  @apply mb-1 ml-8;
 }
 
 .markdown li:last-child {
-    @apply mb-0;
+  @apply mb-0;
 }
 
 .markdown li p:first-child {
-    @apply overflow-visible;
+  @apply overflow-visible;
 }
 
 .markdown ol {
-    @apply mb-4 text-base list-decimal;
+  @apply mb-4 text-base list-decimal;
 }
 
 .markdown code,
 .markdown pre {
-    @apply text-xs leading-6 bg-gray-300 rounded-lg;
+  @apply text-xs leading-6 bg-gray-300 rounded-lg;
 }
 
 .markdown pre {
-    @apply mb-4 rounded-none px-3 py-2.5;
+  @apply mb-4 rounded-none px-3 py-2.5;
 }
 
-.markdown>pre {
-    @apply rounded-lg;
+.markdown > pre {
+  @apply rounded-lg;
 }
 
 .markdown code {
-    @apply p-1 mx-1 my-4;
+  @apply p-1 mx-1 my-4;
 }
 
 .markdown pre code {
-    @apply px-0 py-0 m-0 bg-transparent rounded-none;
+  @apply px-0 py-0 m-0 bg-transparent rounded-none;
 }
 
 :global(.dark) .markdown pre code {
-    @apply bg-transparent;
+  @apply bg-transparent;
 }
 
 .markdown table {
-    box-shadow: 0 0 0 1px #e5e5e5;
-    @apply mb-6 rounded-lg border-hidden;
+  box-shadow: 0 0 0 1px #e5e5e5;
+  @apply mb-6 rounded-lg border-hidden;
 }
 
 :global(.dark) .markdown table {
-    box-shadow: 0 0 0 1px #424242;
-    @apply border-gray-400;
+  box-shadow: 0 0 0 1px #424242;
+  @apply border-gray-400;
 }
 
 .markdown table th {
-    @apply border-gray-400 bg-gray-300 border-[1px] px-5 py-4 text-base font-medium;
+  @apply border-gray-400 bg-gray-300 border-[1px] px-5 py-4 text-base font-medium;
 }
 
 .markdown table th:first-child {
-    @apply rounded-tl-lg;
+  @apply rounded-tl-lg;
 }
 
 .markdown table th:last-child {
-    @apply rounded-tr-lg;
+  @apply rounded-tr-lg;
 }
 
 .markdown table td {
-    @apply border-gray-400 border-[1px] px-5 py-4 text-base;
+  @apply border-gray-400 border-[1px] px-5 py-4 text-base;
 }
 
 .markdown :global(.language-md .table) {
-    /*
+  /*
     FIXME: tailwind-css `.table` conflict with highlight.js `.table`,
            which just have different meanings but with the same name
      */
-    display: inline !important;
+  display: inline !important;
 }
 
 .markdown :global(.katex-html) {
-    overflow-x: auto;
-    overflow-y: hidden;
+  overflow-x: auto;
+  overflow-y: hidden;
 }
 
 .markdown :global(.katex) {
-    @apply mx-[2px] !text-base;
+  @apply mx-[2px] !text-base;
 }
 
 .markdown :global(.video-container) {
-    position: relative;
-    padding-bottom: 56.25%;
-    height: 0;
-    margin-bottom: 10px;
+  position: relative;
+  padding-bottom: 56.25%;
+  height: 0;
+  margin-bottom: 10px;
 }
 
 .markdown :global(.video-container) iframe {
-    position: absolute;
-    top: 0;
-    left: 0;
-    width: 100%;
-    height: 100%;
-    margin: 0;
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  margin: 0;
 }
