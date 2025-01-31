@@ -1,10 +1,17 @@
+import CheckBox from '@/components/UI/CheckBox';
 import { useAppState } from '@/store';
 import PostTableData from '@components/admin/PostTable/PostTableData';
+import { useState } from 'react';
 
 const PostTable = () => {
   const { posts } = useAppState();
+  const [allRowChecked, setAllRowChecked] = useState<boolean>(false);
+  const onCheckAllChange = (checked: boolean) => {
+    setAllRowChecked(checked);
+  };
   return (
     <div className="relative overflow-x-auto shadow-md sm:rounded-lg">
+      {allRowChecked && 'All row has been checked'}
       <table className="w-full text-sm text-left text-gray-500 rtl:text-right dark:text-gray-400">
         <caption className="p-5 text-lg font-semibold text-left text-gray-900 bg-white rtl:text-right dark:text-white dark:bg-gray-800">
           <h3 className="text-xl font-semibold">All posts</h3>
@@ -14,8 +21,8 @@ const PostTable = () => {
         </caption>
         <thead className="text-xs text-gray-700 uppercase bg-gray-50 dark:bg-gray-700 dark:text-gray-400">
           <tr>
-            <th scope="col" className="px-6 py-3 uppercase">
-              ID
+            <th scope="col" className="relative px-6 py-3 uppercase">
+              <CheckBox id="check-all" onChange={onCheckAllChange} />
             </th>
             <th scope="col" className="px-6 py-3 uppercase">
               Title

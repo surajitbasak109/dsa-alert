@@ -45,19 +45,19 @@
 }
 
 @media (max-width: 780px) {
-    .dsa-navigation {
-        inline-size: 0;
-        border-inline-end: 0;
-    }
+  .dsa-navigation {
+    inline-size: 0;
+    border-inline-end: 0;
+  }
 }
 
 .dsa-navigation-container > .dsa-navigation-content {
-    overscroll-behavior-y: contain;
-    block-size: 100%;
-    inline-size: 280px;
-    flex-grow: 1;
-    position: relative;
-    overflow-y: auto;
+  overscroll-behavior-y: contain;
+  block-size: 100%;
+  inline-size: 280px;
+  flex-grow: 1;
+  position: relative;
+  overflow-y: auto;
 }
 
 .inline-size-0 {
@@ -66,6 +66,26 @@
 
 .dsa-main {
   grid-area: main;
+}
+
+/* Checkbox */
+.dsa-alert-styled-box {
+  fill: white;
+  stroke: #8c8c94;
+  stroke-width: 2px;
+  transition: fill 90ms linear, stroke 90ms linear;
+}
+
+.dsa-alert-styled-box-checked {
+  --stroke-color: #006ce0;
+  fill: var(--stroke-color);
+  stroke: var(--stroke-color);
+}
+
+.dsa-alert-styled-line {
+  stroke: #fff;
+  stroke-width: 2;
+  fill: none;
 }
 
 /* Markdown */
