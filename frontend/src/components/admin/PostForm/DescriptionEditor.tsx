@@ -112,7 +112,6 @@ const DescriptionEditor = () => {
   };
 
   const applyListFormatting = (key: string, focus = false) => {
-    console.log({ key });
     const editor = editorRef.current;
     const monaco = monacoRef.current;
     if (!editor || !monaco) return;
@@ -201,7 +200,7 @@ const DescriptionEditor = () => {
             <div className="border-t border-[#0000000d] dark:border-dark-divider-3 grow">
               <div className="w-full h-full">
                 <Editor
-                  defaultValue={editor.defaultValue}
+                  defaultValue={postForm.data.description}
                   defaultLanguage={editor.defaultLanguage}
                   options={editor.options}
                   theme="vs-light"
@@ -218,7 +217,7 @@ const DescriptionEditor = () => {
             )}>
             <ReactMarkdown
               className="prose markdown"
-              children={postForm.description}
+              children={postForm.data.description}
             />
           </div>
         </div>

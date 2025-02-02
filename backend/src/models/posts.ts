@@ -11,6 +11,7 @@ export async function getAllPosts() {
         select: {
           tags: {
             select: {
+              id: true,
               name: true
             }
           }
@@ -28,7 +29,7 @@ export async function getAllPosts() {
       ...post,
       platform: post.platform.name,
       difficulty: difficultyText(post.difficulty),
-      tags: post.tags.map((tag) => tag.tags.name)
+      tags: post.tags.map((tag) => ({ id: tag.tags.id, name: tag.tags.name }))
     };
   });
 }
@@ -120,6 +121,7 @@ export async function getPost(id: number) {
         select: {
           tags: {
             select: {
+              id: true,
               name: true
             }
           }
@@ -138,7 +140,8 @@ export async function getPost(id: number) {
   return {
     ...post,
     platform: post.platform.name,
-    difficulty: difficultyText(post.difficulty),
-    tags: post.tags.map((tag) => tag.tags.name)
+    difficultyText: difficultyText(post.difficulty),
+    difficulty: post.difficulty,
+    tags: post.tags.map((tag) => ({ id: tag.tags.id, name: tag.tags.name }))
   };
 }

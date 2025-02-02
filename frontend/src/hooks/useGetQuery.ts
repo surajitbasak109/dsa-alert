@@ -21,7 +21,7 @@ function useGetQuery<T>({ path }: Props) {
         setData(data);
       } catch (error) {
         console.error(error);
-        setError(error);
+        setError(error as T);
       } finally {
         setIsLoading(false);
       }

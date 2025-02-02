@@ -21,36 +21,71 @@ const difficulties = [
 
 type PostFormProp = {
   onCancel: () => void;
+  id?: number;
 };
 
-const PostForm = ({ onCancel }: PostFormProp) => {
-  const { getPlatformSelectData, postFormAction, addPost, clearApiErrors } =
-    useActions();
+const PostForm = ({ onCancel, id }: PostFormProp) => {
+  const {
+    postAction: { getPlatformSelectData, addPost, getPost, updatePost },
+    postFormAction: {
+      setPostFormId,
+      setPostForm,
+      setPostFormEmpty,
+      setTitle,
+      setProblemId,
+      setPlatform,
+      setLink,
+      setDifficulty,
+      setSelectedTags
+    },
+    clearApiErrors
+  } = useActions();
   const {
     platformSelectData,
     postForm: postFormBody,
-    apiErrors
+    apiErrors,
+    post
   } = useAppState();
   useEffect(() => {
     getPlatformSelectData();
   }, [getPlatformSelectData]);
   const handleSubmit = (e: FormEvent) => {
     e.preventDefault();
-    const { selectedTags, ...rest } = postFormBody;
+    const { selectedTags, ...rest } = postFormBody.data;
     const tags = selectedTags.map((tag) => Number(tag.id));
     const postBody = {
       ...rest,
       tags
     };
-    addPost(postBody);
-    postFormAction.setPostFormEmpty();
+    if (id) {
+      updatePost({ id, post: postBody });
+    } else {
+      addPost(postBody);
+    }
+    setPostFormEmpty();
     onCancel();
   };
+
+  useEffect(() => {
+    if (id) {
+      setPostFormId(id);
+      getPost(id);
+    }
+  }, [id, setPostFormId, getPost]);
+
+  useEffect(() => {
+    if (post) {
+      setPostForm(post);
+    }
+  }, [setPostForm, post]);
+
   return (
     <form
       className="relative w-full px-4 py-3 mx-auto mb-3 bg-white shadow-md md:max-w-7xl sm:rounded-lg"
       onSubmit={handleSubmit}>
-      <h2 className="mb-3 text-xl font-bold">Create a new Post</h2>
+      <h2 className="mb-3 text-xl font-bold">
+        {id ? 'Edit post' : 'Create a new Post'}
+      </h2>
       {apiErrors && (
         <div className="fixed top-0 left-0 right-0 z-50 flex items-center justify-between p-3 text-red-500 bg-red-100">
           <div>{apiErrors.message}</div>
@@ -80,9 +115,9 @@ const PostForm = ({ onCancel }: PostFormProp) => {
         id="title"
         name="title"
         type="text"
-        defaultValue={postFormBody.title}
+        value={postFormBody.data.title}
         placeholder="Enter title"
-        onChange={(e) => postFormAction.setTitle(e.target.value)}
+        onChange={(e) => setTitle(e.target.value)}
         required={true}
       />
       <div className="flex flex-col items-center justify-between w-full gap-1 lg:gap-3 lg:flex-row">
@@ -91,10 +126,10 @@ const PostForm = ({ onCancel }: PostFormProp) => {
           id="problem-id"
           name="problemId"
           type="text"
-          defaultValue={postFormBody.problemId}
+          value={postFormBody.data.problemId}
           placeholder="Enter problem ID"
           required={true}
-          onChange={(e) => postFormAction.setProblemId(e.target.value)}
+          onChange={(e) => setProblemId(e.target.value)}
           wrapperClassName="w-full lg:w-1/3"
         />
         <fieldset className="w-full mb-5 lg:w-1/3">
@@ -107,10 +142,8 @@ const PostForm = ({ onCancel }: PostFormProp) => {
             id="platforms"
             name="platformId"
             className="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500"
-            defaultValue={postFormBody.platformId}
-            onChange={(e) =>
-              postFormAction.setPlatform(Number(e.target.value))
-            }>
+            value={postFormBody.data.platformId}
+            onChange={(e) => setPlatform(Number(e.target.value))}>
             <option>Select Platform</option>
             {platformSelectData?.map((platform) => (
               <option value={platform.id} key={platform.id}>
@@ -128,10 +161,8 @@ const PostForm = ({ onCancel }: PostFormProp) => {
           <select
             id="difficulty"
             name="difficulty"
-            defaultValue={postFormBody.difficulty}
-            onChange={(e) =>
-              postFormAction.setDifficulty(Number(e.target.value))
-            }
+            value={postFormBody.data.difficulty}
+            onChange={(e) => setDifficulty(Number(e.target.value))}
             className="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500">
             <option>Select Difficulty</option>
             {difficulties?.map((difficulty) => (
@@ -143,11 +174,16 @@ const PostForm = ({ onCancel }: PostFormProp) => {
         </fieldset>
       </div>
 
-      <TagsInput
-        onChange={(selectedTags) =>
-          postFormAction.setSelectedTags(selectedTags)
-        }
-      />
+      {!post && (
+        <TagsInput onChange={(selectedTags) => setSelectedTags(selectedTags)} />
+      )}
+
+      {post && (
+        <TagsInput
+          onChange={(selectedTags) => setSelectedTags(selectedTags)}
+          value={post.tags}
+        />
+      )}
 
       <InputField
         type="url"
@@ -155,8 +191,8 @@ const PostForm = ({ onCancel }: PostFormProp) => {
         id="link"
         label="Link"
         placeholder="Enter link"
-        defaultValue={postFormBody.link}
-        onChange={(e) => postFormAction.setLink(e.target.value)}
+        value={postFormBody.data.link}
+        onChange={(e) => setLink(e.target.value)}
         required={true}
       />
 

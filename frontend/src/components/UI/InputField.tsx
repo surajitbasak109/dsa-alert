@@ -4,7 +4,7 @@ type InputFieldProps = {
   id: string;
   type: 'text' | 'email' | 'number' | 'password' | 'tel' | 'url';
   placeholder: string;
-  defaultValue?: string;
+  value?: string;
   required?: boolean;
   inputClassName?: string;
   wrapperClassName?: string;
@@ -17,7 +17,7 @@ const InputField: React.FC<InputFieldProps> = ({
   id,
   type = 'text',
   placeholder,
-  defaultValue = '',
+  value = '',
   required = false,
   inputClassName = '',
   wrapperClassName = '',
@@ -36,7 +36,7 @@ const InputField: React.FC<InputFieldProps> = ({
         type={type}
         name={name}
         id={id}
-        defaultValue={defaultValue}
+        value={value}
         placeholder={placeholder}
         className={inputClassName}
         required={required}

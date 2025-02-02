@@ -23,13 +23,21 @@ export type Post = {
   problemId: string;
   link: string;
   description: string;
-  difficulty: string;
+  difficulty: number;
+  difficultyText: number;
   platformId: number;
-  tags: string[];
+  tags: SearchTag[];
   platform: string;
 };
 
-export type PostBody = Omit<Post, 'id' | 'platform' | 'difficulty' | 'tags'> & {
+export type PostTableType = Post & {
+  selected: boolean;
+}
+
+export type PostBody = Omit<
+  Post,
+  'id' | 'platform' | 'difficulty' | 'tags' | 'difficultyText'
+> & {
   difficulty: number;
   tags: number[];
 };

@@ -1,5 +1,5 @@
 import clsx from 'clsx';
-import { ChangeEvent, useState } from 'react';
+import { ChangeEvent } from 'react';
 
 type CheckBoxProp = {
   onChange?: (checked: boolean, element: HTMLElement | null) => void;
@@ -14,15 +14,12 @@ const CheckBox: React.FC<CheckBoxProp> = ({
   checked = false,
   ...rest
 }) => {
-  const defaultChecked = checked ? checked : false;
-  const [isChecked, setIsChecked] = useState<boolean>(defaultChecked);
   const handleCheckboxChange = (e: ChangeEvent<HTMLInputElement>) => {
-    const newCheckedState = !isChecked;
-    setIsChecked(newCheckedState);
-    onChange(newCheckedState, e.target);
+    onChange(e.target.checked, e.target);
   };
+
   return (
-    <label className="box-border absolute top-0 flex items-center justify-center w-full h-full pr-1 border-r border-transparent start-0">
+    <label className="box-border absolute top-0 flex items-center justify-center w-full h-full pr-1 border-r border-transparent cursor-pointer start-0">
       <span className="relative size-4">
         <svg
           className="absolute top-0 left-0 w-full h-full"
@@ -32,7 +29,7 @@ const CheckBox: React.FC<CheckBoxProp> = ({
           <rect
             className={clsx(
               `dsa-alert-styled-box`,
-              isChecked && 'dsa-alert-styled-box-checked'
+              checked && 'dsa-alert-styled-box-checked'
             )}
             x="1"
             y="1"
@@ -40,7 +37,7 @@ const CheckBox: React.FC<CheckBoxProp> = ({
             ry="2"
             width="14"
             height="14"></rect>
-          {isChecked && (
+          {checked && (
             <polyline
               className="dsa-alert-styled-line"
               points="3.5,8 7,11 12,4"></polyline>
@@ -49,7 +46,7 @@ const CheckBox: React.FC<CheckBoxProp> = ({
         <input
           type="checkbox"
           onChange={handleCheckboxChange}
-          checked={isChecked}
+          checked={checked}
           name={name}
           {...rest}
         />

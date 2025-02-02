@@ -7,17 +7,19 @@ import { FormEvent, KeyboardEvent, useEffect, useState } from 'react';
 
 type TagsInputProps = {
   onChange: (selectedTags: SearchTag[]) => void;
+  value?: SearchTag[];
 };
 
-const TagsInput = ({ onChange }: TagsInputProps) => {
-  const { searchTags } = useActions();
+const TagsInput = ({ onChange, value = [] }: TagsInputProps) => {
+  const {
+    postAction: { searchTags }
+  } = useActions();
   const { searchTagsData } = useAppState();
   const [searchTerm, setSearchTerm] = useState<string>('');
   const [isSearching, setIsSearching] = useState<boolean>(false);
   const debouncedSearchTerm = useDebounce(searchTerm, 300);
-  const [selectedTags, setSelectedTags] = useState<
-    Omit<SearchTag, 'highlighted'>[]
-  >([]);
+  const [selectedTags, setSelectedTags] =
+    useState<Omit<SearchTag, 'highlighted'>[]>(value);
   const [tagListIsHidden, setTagListIsHidden] = useState(true);
   const [highlightIndex, setHighlightIndex] = useState(0);
   const tagsInputRef = useClickAway<HTMLFieldSetElement>(() => {
@@ -33,10 +35,14 @@ const TagsInput = ({ onChange }: TagsInputProps) => {
     if (!tag) {
       const resultTag = searchTagsData.find((result) => result.id === id);
       if (resultTag) {
-        setSelectedTags([...selectedTags, resultTag]);
+        const newTags = [...selectedTags, resultTag];
+        setSelectedTags(newTags);
+        onChange(newTags);
       }
     } else {
-      setSelectedTags([...selectedTags].filter((tags) => tags.id != id));
+      const filteredTags = [...selectedTags].filter((tags) => tags.id != id);
+      setSelectedTags(filteredTags);
+      onChange(filteredTags);
     }
   };
 
@@ -63,6 +69,8 @@ const TagsInput = ({ onChange }: TagsInputProps) => {
       selectedTags.length > 0
     ) {
       setSelectedTags(selectedTags.slice(0, -1));
+    } else if (e.code === 'Tab') {
+      setTagListIsHidden(true);
     }
   };
 
@@ -84,9 +92,7 @@ const TagsInput = ({ onChange }: TagsInputProps) => {
       setTagListIsHidden(false);
     }
   }, [searchTagsData]);
-  useEffect(() => {
-    onChange(selectedTags);
-  }, [selectedTags, onChange]);
+
   return (
     <fieldset className="mb-5" ref={tagsInputRef}>
       <label
@@ -113,7 +119,7 @@ const TagsInput = ({ onChange }: TagsInputProps) => {
           <input
             type="text"
             id="tags-input"
-            defaultValue={searchTerm}
+            value={searchTerm}
             onChange={handleChange}
             placeholder="Enter tags separated by comma"
             className="text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block p-2.5 outline-none w-full"
@@ -121,7 +127,6 @@ const TagsInput = ({ onChange }: TagsInputProps) => {
             onKeyDown={handleKeyDown}
             onBlur={() => {
               setHighlightIndex(-1);
-              setTagListIsHidden(true);
             }}
             autoComplete="off"
           />

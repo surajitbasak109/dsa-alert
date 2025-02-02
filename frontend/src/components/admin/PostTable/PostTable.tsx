@@ -1,13 +1,19 @@
 import CheckBox from '@/components/UI/CheckBox';
-import { useAppState } from '@/store';
+import { useActions, useAppState } from '@/store';
 import PostTableData from '@components/admin/PostTable/PostTableData';
 import { useState } from 'react';
 
 const PostTable = () => {
-  const { posts } = useAppState();
+  const {
+    postTable: { posts }
+  } = useAppState();
+  const {
+    postTableAction: { setAllSelectedIds }
+  } = useActions();
   const [allRowChecked, setAllRowChecked] = useState<boolean>(false);
   const onCheckAllChange = (checked: boolean) => {
     setAllRowChecked(checked);
+    setAllSelectedIds(checked);
   };
   return (
     <div className="relative overflow-x-auto shadow-md sm:rounded-lg">
@@ -22,7 +28,11 @@ const PostTable = () => {
         <thead className="text-xs text-gray-700 uppercase bg-gray-50 dark:bg-gray-700 dark:text-gray-400">
           <tr>
             <th scope="col" className="relative px-6 py-3 uppercase">
-              <CheckBox id="check-all" onChange={onCheckAllChange} />
+              <CheckBox
+                checked={allRowChecked}
+                id="check-all"
+                onChange={onCheckAllChange}
+              />
             </th>
             <th scope="col" className="px-6 py-3 uppercase">
               Title
@@ -39,7 +49,7 @@ const PostTable = () => {
             <th scope="col" className="px-6 py-3 uppercase">
               Platform
             </th>
-            <th scope="col" className="px-6 py-3 uppercase">
+            <th scope="col" className="hidden px-6 py-3 uppercase xl:block">
               Tags
             </th>
           </tr>
@@ -55,7 +65,7 @@ const PostTable = () => {
             </tr>
           )}
           {posts.map((post) => (
-            <PostTableData key={post.id} {...post} />
+            <PostTableData key={post.id} post={post} />
           ))}
         </tbody>
       </table>
