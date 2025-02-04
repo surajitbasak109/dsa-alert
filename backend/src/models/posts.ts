@@ -4,27 +4,36 @@ import db from 'src/utilities/db';
 
 export type PostParam = Omit<Post, 'id'>;
 
-export async function getAllPosts() {
-  const posts = await db.post.findMany({
-    include: {
-      tags: {
-        select: {
-          tags: {
-            select: {
-              id: true,
-              name: true
+export async function getAllPosts(page: number = 1) {
+  const itemsPerPage = 10;
+  const skip = (page - 1) * itemsPerPage;
+  const [posts, total] = await Promise.all([
+    db.post.findMany({
+      skip,
+      take: itemsPerPage,
+      include: {
+        tags: {
+          select: {
+            tags: {
+              select: {
+                id: true,
+                name: true
+              }
             }
           }
-        }
-      },
-      platform: {
-        select: {
-          name: true
+        },
+        platform: {
+          select: {
+            name: true
+          }
         }
       }
-    }
-  });
-  return posts.map((post) => {
+    }),
+    db.post.count() // Get the total number of posts
+  ]);
+
+  const totalPages = Math.ceil(total / itemsPerPage);
+  const structuredPost = posts.map((post) => {
     return {
       ...post,
       platform: post.platform.name,
@@ -32,6 +41,15 @@ export async function getAllPosts() {
       tags: post.tags.map((tag) => ({ id: tag.tags.id, name: tag.tags.name }))
     };
   });
+  return {
+    posts: structuredPost,
+    pagination: {
+      total,
+      totalPages,
+      currentPage: page,
+      itemsPerPage
+    }
+  };
 }
 
 export async function createPost(post: PostParam, tags: number[]) {

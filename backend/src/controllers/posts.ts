@@ -10,8 +10,13 @@ import { sendErrorResponse, sendSuccessResponse } from '@utilities/response';
 import { Request, Response } from 'express';
 export default class PostController {
   async index(req: Request, res: Response) {
-    const posts = await getAllPosts();
-    sendSuccessResponse(res, posts, 200, 'All posts');
+    let page = parseInt(req.query.page as string) || 1;
+    const { posts, pagination } = await getAllPosts(page);
+    // Validate page number
+    if (isNaN(page) || page < 1) {
+      page = 1;
+    }
+    sendSuccessResponse(res, { posts, pagination }, 200, 'All posts');
   }
   async show(req: Request, res: Response) {
     try {

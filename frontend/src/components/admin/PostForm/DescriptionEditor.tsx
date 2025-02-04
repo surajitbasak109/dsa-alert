@@ -200,7 +200,7 @@ const DescriptionEditor = () => {
             <div className="border-t border-[#0000000d] dark:border-dark-divider-3 grow">
               <div className="w-full h-full">
                 <Editor
-                  defaultValue={postForm.data.description}
+                  value={postForm.data.description}
                   defaultLanguage={editor.defaultLanguage}
                   options={editor.options}
                   theme="vs-light"

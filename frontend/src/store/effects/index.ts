@@ -3,14 +3,18 @@ import {
   PlatformSelectProp,
   Post,
   PostBody,
+  PostWithPaginationType,
   SearchTag,
   SuccessResponse
 } from '@/types';
 
 const apiUrl = import.meta.env.VITE_API_URL;
 export const api = {
-  getPosts: async (): Promise<SuccessResponse<Post[]>> => {
-    const response = await fetch(apiUrl + '/posts');
+  getPosts: async (
+    page: number = 1
+  ): Promise<SuccessResponse<PostWithPaginationType>> => {
+    const path = page > 1 ? `/posts?page=${page}` : `/posts`;
+    const response = await fetch(apiUrl + path);
     return response.json();
   },
   getPost: async (id: number): Promise<SuccessResponse<Post>> => {
@@ -63,7 +67,10 @@ export const api = {
       };
     }
   },
-  updatePost: async (id:number, post: PostBody): Promise<ApiResponse<Post>> => {
+  updatePost: async (
+    id: number,
+    post: PostBody
+  ): Promise<ApiResponse<Post>> => {
     try {
       const response = await fetch(`${apiUrl}/posts/${id}`, {
         method: 'put',

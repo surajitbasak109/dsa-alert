@@ -1,22 +1,27 @@
 import CheckBox from '@/components/UI/CheckBox';
+import Pagination from '@/components/UI/Pagination';
 import { useActions, useAppState } from '@/store';
 import PostTableData from '@components/admin/PostTable/PostTableData';
 import { useState } from 'react';
 
 const PostTable = () => {
   const {
-    postTable: { posts }
+    postTable: { posts, pagination }
   } = useAppState();
   const {
-    postTableAction: { setAllSelectedIds }
+    postTableAction: { setAllSelectedIds },
+    postAction: { getPosts }
   } = useActions();
   const [allRowChecked, setAllRowChecked] = useState<boolean>(false);
   const onCheckAllChange = (checked: boolean) => {
     setAllRowChecked(checked);
     setAllSelectedIds(checked);
   };
+  const handlePageChange = (page: number) => {
+    getPosts(page); // Fetch posts for the new page
+  };
   return (
-    <div className="relative overflow-x-auto shadow-md sm:rounded-lg">
+    <div className="relative pb-5 overflow-x-auto shadow-md sm:rounded-lg">
       {allRowChecked && 'All row has been checked'}
       <table className="w-full text-sm text-left text-gray-500 rtl:text-right dark:text-gray-400">
         <caption className="p-5 text-lg font-semibold text-left text-gray-900 bg-white rtl:text-right dark:text-white dark:bg-gray-800">
@@ -69,6 +74,11 @@ const PostTable = () => {
           ))}
         </tbody>
       </table>
+      {pagination && (
+        <div className="max-w-sm mx-auto">
+          <Pagination pagination={pagination} onPageChange={handlePageChange} />
+        </div>
+      )}
     </div>
   );
 };

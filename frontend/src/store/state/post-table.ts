@@ -1,11 +1,13 @@
-import { PostTableType } from "@/types";
+import { PaginationType, PostTableType } from '@/types';
 
 export type PostTableStateType = {
-  posts: PostTableType[],
+  posts: PostTableType[];
+  pagination: PaginationType | null;
   selectedIds: number[];
 };
 
 export default {
   posts: [],
+  pagination: null,
   selectedIds: []
 } satisfies PostTableStateType;

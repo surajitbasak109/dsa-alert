@@ -95,7 +95,7 @@ const AdminLayout = () => {
       <main
         style={{ inlineSize: 'calc(100% - 280px)' }}
         className={clsx('bg-gray-100 contents sticky z-[850]')}>
-        <div className="dsa-main">
+        <div className="mb-24 dsa-main">
           <Outlet />
         </div>
       </main>

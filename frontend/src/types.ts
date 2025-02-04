@@ -30,9 +30,21 @@ export type Post = {
   platform: string;
 };
 
+export type PaginationType = {
+  total: number;
+  totalPages: number;
+  currentPage: number;
+  itemsPerPage: number;
+};
+
+export type PostWithPaginationType = {
+  posts: Post[];
+  pagination: PaginationType;
+};
+
 export type PostTableType = Post & {
   selected: boolean;
-}
+};
 
 export type PostBody = Omit<
   Post,

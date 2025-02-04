@@ -1,13 +1,14 @@
 import { Context } from '@/store';
-import { ApiErrorResponse, PostBody } from '@/types';
+import { ApiErrorResponse, PostBody, PostTableType } from '@/types';
 
-const getPosts = async ({ state, effects }: Context) => {
-  const allPosts = await effects.api.getPosts();
-  state.posts = allPosts.data;
-  state.postTable.posts = allPosts.data.map((data) => ({
+const getPosts = async ({ state, effects }: Context, page: number = 1) => {
+  const allPosts = await effects.api.getPosts(page);
+  state.posts = allPosts.data.posts;
+  state.postTable.posts = allPosts.data.posts.map((data) => ({
     ...data,
     selected: false
   }));
+  state.postTable.pagination = allPosts.data.pagination;
 };
 
 const getPlatformSelectData = async ({ state, effects }: Context) => {
@@ -25,6 +26,7 @@ const addPost = async ({ state, effects }: Context, post: PostBody) => {
   if (response.status) {
     if ('data' in response) {
       state.posts.push(response.data);
+      state.postTable.posts.push(response.data as PostTableType);
     }
   } else {
     console.error('Error adding post: ', response.message);
