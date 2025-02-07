@@ -2,13 +2,14 @@ import { defineConfig } from 'vite';
 import react from '@vitejs/plugin-react';
 import { fileURLToPath } from 'url';
 import path, { dirname } from 'path';
+import tailwindcss from '@tailwindcss/vite';
 
 const __filename = fileURLToPath(import.meta.url);
 const __dirname = dirname(__filename);
 
 // https://vite.dev/config/
 export default defineConfig({
-  plugins: [react()],
+  plugins: [react(), tailwindcss()],
   server: {
     port: 4000
   },
@@ -21,7 +22,7 @@ export default defineConfig({
       '@utils': path.resolve(__dirname, './src/utils'),
       '@store': path.resolve(__dirname, './src/store'),
       '@config': path.resolve(__dirname, './src/config'),
-      '@layouts': path.resolve(__dirname, './src/layouts'),
+      '@layouts': path.resolve(__dirname, './src/layouts')
     }
   }
 });

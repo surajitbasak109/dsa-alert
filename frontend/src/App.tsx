@@ -4,6 +4,7 @@ import Admin from '@/pages/admin';
 import Post from './pages/admin/Post';
 import AdminLayout from './layouts/AdminLayout';
 import RedirectToDashboard from './pages/admin/RedirectToDashboard';
+import PostPreview from './pages/admin/Post/Preview';
 
 function App() {
   return (
@@ -13,6 +14,7 @@ function App() {
         <Route index element={<RedirectToDashboard />} />
         <Route path="dashboard" element={<Admin />} />
         <Route path="posts" element={<Post />} />
+        <Route path="posts/:id" element={<PostPreview />} />
       </Route>
       <Route path="*" element={<div>404 Not found</div>} />
     </Routes>

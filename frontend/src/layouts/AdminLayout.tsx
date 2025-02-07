@@ -13,7 +13,7 @@ const AdminLayout = () => {
       }}>
       <section
         style={{ insetBlockStart: '0px', blockSize: '80px' }}
-        className="sticky flex items-center justify-between w-full p-4 bg-white border-b z-[1000] dsa-toolbar">
+        className="sticky flex items-center justify-between w-full p-4 bg-white border-b border-gray-300 z-[1000] dsa-toolbar">
         <div className="flex items-center gap-4">
           <button
             className="hidden w-8 h-8 text-center text-white rounded-full cursor-pointer bg-sky-600 md:inline-block"

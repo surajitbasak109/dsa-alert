@@ -1,6 +1,22 @@
-@tailwind base;
-@tailwind components;
-@tailwind utilities;
+@import 'tailwindcss';
+
+[role='button'] {
+  cursor: pointer;
+}
+
+/* General */
+@utility text-label-2 {
+  color: #262626bf;
+}
+@utility text-label-1 {
+  color: #262626;
+}
+@utility bg-fill-secondary {
+  background-color: #0000000f;
+}
+@utility text-text-secondary {
+  color: #0000008c;
+}
 
 /* Layout */
 .dsa-root {
@@ -232,7 +248,7 @@
 }
 
 .markdown pre code {
-  @apply px-0 py-0 m-0 bg-transparent rounded-none;
+  @apply px-0 py-0 m-0 text-black bg-transparent rounded-none;
 }
 
 :global(.dark) .markdown pre code {

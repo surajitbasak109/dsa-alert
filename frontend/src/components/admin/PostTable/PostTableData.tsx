@@ -1,6 +1,7 @@
 import CheckBox from '@/components/UI/CheckBox';
 import { useActions, useAppState } from '@/store';
 import { PostTableType } from '@/types';
+import { Link } from 'react-router';
 
 type PostTableProp = {
   post: PostTableType;
@@ -42,7 +43,7 @@ const PostTableData = ({ post }: PostTableProp) => {
         />
       </td>
       <td className="px-6 py-4 font-medium text-gray-900 whitespace-nowrap dark:text-white">
-        {post.title}
+        <Link to={`/admin/posts/${post.id}`} className='text-sky-700'>{post.title}</Link>
       </td>
       <td className="px-6 py-4">{post.problemId}</td>
       <td className="px-6 py-4">
