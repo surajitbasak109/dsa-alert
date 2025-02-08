@@ -21,6 +21,11 @@ const searchTags = async ({ state, effects }: Context, value: string) => {
   state.searchTagsData = allTags.data;
 };
 
+const searchCompanies = async ({ state, effects }: Context, value: string) => {
+  const allCompanies = await effects.api.searchCompanies(value);
+  state.searchTagsData = allCompanies.data;
+};
+
 const addPost = async ({ state, effects }: Context, post: PostBody) => {
   const response = await effects.api.addPost(post);
   if (response.status) {
@@ -70,5 +75,6 @@ export default {
   searchTags,
   addPost,
   updatePost,
-  setPostEmpty
+  setPostEmpty,
+  searchCompanies
 };

@@ -1,4 +1,4 @@
-import { ApiErrorResponse, PlatformSelectProp, Post, SearchTag } from '@/types';
+import { ApiErrorResponse, CompanySearchType, PlatformSelectProp, Post, SearchTag } from '@/types';
 import postForm, { type PostForm } from './post-form';
 import editorOPtions, { type EditorOptionsType } from './editor';
 import { PostTableStateType } from './post-table';
@@ -9,6 +9,7 @@ export type StoreState = {
   post: null | Post;
   platformSelectData: PlatformSelectProp[];
   searchTagsData: SearchTag[];
+  searchCompaniesData: CompanySearchType[];
   postTable: PostTableStateType;
   postForm: PostForm;
   apiErrors: null | ApiErrorResponse;
@@ -19,6 +20,7 @@ const initialState: StoreState = {
   posts: [],
   post: null,
   searchTagsData: [],
+  searchCompaniesData: [],
   platformSelectData: [],
   postTable,
   postForm,

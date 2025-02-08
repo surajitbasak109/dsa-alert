@@ -2,7 +2,8 @@ import InputField from '@/components/UI/InputField';
 import { FormEvent, useEffect } from 'react';
 import TagsInput from './TagsInput';
 import DescriptionEditor from './DescriptionEditor';
-import { useActions, useAppState } from '@/store';
+import { useActions, useAppState, } from '@/store';
+import CompanyInput from './CompanyInput';
 
 const difficulties = [
   {
@@ -36,7 +37,8 @@ const PostForm = ({ onCancel, id }: PostFormProp) => {
       setPlatform,
       setLink,
       setDifficulty,
-      setSelectedTags
+      setSelectedTags,
+      setSelectedCompanies
     },
     clearApiErrors
   } = useActions();
@@ -184,6 +186,10 @@ const PostForm = ({ onCancel, id }: PostFormProp) => {
           value={post.tags}
         />
       )}
+
+      <CompanyInput
+        onChange={(selectedCompany) => setSelectedCompanies(selectedCompany)}
+      />
 
       <InputField
         type="url"

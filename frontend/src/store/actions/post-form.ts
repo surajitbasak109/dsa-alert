@@ -1,5 +1,5 @@
 import { Context } from '@/store';
-import { Post, SearchTag } from '@/types';
+import { CompanySearchType, Post, SearchTag } from '@/types';
 const postFormAction = {
   setDescription: ({ state }: Context, description: string) => {
     state.postForm.data.description = description;
@@ -9,6 +9,12 @@ const postFormAction = {
     selectedTags: Omit<SearchTag, 'highlighted'>[]
   ) => {
     state.postForm.data.selectedTags = selectedTags;
+  },
+  setSelectedCompanies: (
+    { state }: Context,
+    selectedCompanies: Omit<CompanySearchType, 'highlighted'>[]
+  ) => {
+    state.postForm.data.selectedCompanies = selectedCompanies;
   },
   setTitle: ({ state }: Context, title: string) => {
     state.postForm.data.title = title;
@@ -37,16 +43,28 @@ const postFormAction = {
       difficulty: 1,
       link: '',
       tags: [],
+      companies: [],
       description: '# Problem Heading',
-      selectedTags: []
+      selectedTags: [],
+      selectedCompanies: []
     };
     state.searchTagsData = [];
+    state.searchCompaniesData = [];
   },
   setPostFormId: async ({ state }: Context, id: number) => {
     state.postForm.id = id;
   },
   setPostForm: ({ state }: Context, post: Post) => {
-    const { tags, difficulty, title, description, platformId,link,problemId } = post;
+    const {
+      tags,
+      difficulty,
+      title,
+      description,
+      platformId,
+      link,
+      problemId,
+      companies
+    } = post;
     state.postForm.data = {
       title,
       problemId,
@@ -55,6 +73,8 @@ const postFormAction = {
       link,
       difficulty,
       selectedTags: tags,
+      selectedCompanies: companies,
+      companies: companies.map((company) => company.id),
       tags: tags.map((tag) => tag.id)
     };
   }

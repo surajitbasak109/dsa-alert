@@ -17,6 +17,12 @@ export type SearchTag = {
   highlighted?: boolean;
 };
 
+export type CompanySearchType = {
+  id: number;
+  name: string;
+  highlighted?: boolean;
+};
+
 export type Post = {
   id: number;
   title: string;
@@ -28,6 +34,7 @@ export type Post = {
   platformId: number;
   tags: SearchTag[];
   platform: string;
+  companies: CompanySearchType[];
 };
 
 export type PaginationType = {
@@ -48,10 +55,11 @@ export type PostTableType = Post & {
 
 export type PostBody = Omit<
   Post,
-  'id' | 'platform' | 'difficulty' | 'tags' | 'difficultyText'
+  'id' | 'platform' | 'difficulty' | 'tags' | 'companies' | 'difficultyText'
 > & {
   difficulty: number;
   tags: number[];
+  companies: number[];
 };
 
 export type ApiErrorResponse = {

@@ -1,4 +1,4 @@
-import { SearchTag } from '@/types';
+import { CompanySearchType, SearchTag } from '@/types';
 
 export type PostForm = {
   id?: number;
@@ -10,7 +10,9 @@ export type PostForm = {
     link: string;
     description: string;
     tags: number[];
+    companies: number[];
     selectedTags: Omit<SearchTag, 'highlighted'>[];
+    selectedCompanies: Omit<CompanySearchType, 'highlighted'>[];
   };
 };
 
@@ -22,8 +24,10 @@ const postForm: PostForm = {
     difficulty: 1,
     link: '',
     tags: [],
+    companies: [],
     description: '# Problem Heading',
-    selectedTags: []
+    selectedTags: [],
+    selectedCompanies: [],
   }
 };
 

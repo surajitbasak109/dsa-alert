@@ -1,5 +1,6 @@
 import {
   ApiResponse,
+  CompanySearchType,
   PlatformSelectProp,
   Post,
   PostBody,
@@ -31,6 +32,12 @@ export const api = {
     searchTerm: string
   ): Promise<SuccessResponse<SearchTag[]>> => {
     const response = await fetch(`${apiUrl}/tags/search?qs=${searchTerm}`);
+    return response.json();
+  },
+  searchCompanies: async (
+    searchTerm: string
+  ): Promise<SuccessResponse<CompanySearchType[]>> => {
+    const response = await fetch(`${apiUrl}/companies/search?qs=${searchTerm}`);
     return response.json();
   },
   addPost: async (post: PostBody): Promise<ApiResponse<Post>> => {

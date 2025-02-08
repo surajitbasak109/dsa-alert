@@ -8,7 +8,7 @@ const PostPreview = () => {
   const { id } = useParams();
   const [error, setError] = useState<string | null>(null);
   const [isTopicsOpen, setIsTopicsOpen] = useState<boolean>(false);
-  const { getPost } = useActions().postAction;
+  const { getPost, setPostEmpty } = useActions().postAction;
   const { post } = useAppState();
   const topicsContainerRef = useRef<null | HTMLDivElement>(null);
   useEffect(() => {
@@ -19,11 +19,22 @@ const PostPreview = () => {
     } else {
       getPost(parseInt(id as string));
     }
-  }, [id, getPost]);
+
+    return () => {
+      setPostEmpty();
+    };
+  }, [id, getPost, setPostEmpty]);
   if (error) {
     return (
       <div className="container flex items-center justify-center min-h-full px-4 mx-auto md:px-1 lg:px-0">
         <h2 className="text-xl font-bold leading-tight">{error}</h2>
+      </div>
+    );
+  }
+  if (!post) {
+    return (
+      <div className="container flex items-center justify-center min-h-full px-4 mx-auto md:px-1 lg:px-0">
+        <h2 className="text-xl font-bold leading-tight">Post not found</h2>
       </div>
     );
   }
@@ -70,7 +81,7 @@ const PostPreview = () => {
             </div>
             <a
               href={post.link}
-              target='_blank'
+              target="_blank"
               className="flex items-center justify-center px-4 py-2 text-xs rounded-full gap-x-2 bg-fill-secondary text-label-2 hover:text-label-1"
               rel="noreferer noopener">
               <svg

@@ -1,3 +1,5 @@
+import clsx from 'clsx';
+
 type PaginationProps = {
   pagination: {
     currentPage: number;
@@ -20,7 +22,10 @@ const Pagination = ({ pagination, onPageChange }: PaginationProps) => {
       <button
         onClick={() => handlePageChange(pagination.currentPage - 1)}
         disabled={pagination.currentPage === 1}
-        className="px-4 py-2 text-sm font-medium text-gray-700 bg-white border border-gray-300 rounded-lg hover:bg-gray-50 disabled:opacity-50">
+        className={clsx(
+          `px-4 py-2 text-sm font-medium text-gray-700 bg-white border border-gray-300 rounded-lg hover:bg-gray-50 disabled:opacity-50`,
+          pagination.currentPage === 1 ? 'cursor-not-allowed' : 'cursor-pointer'
+        )}>
         Previous
       </button>
       <span>
@@ -29,7 +34,12 @@ const Pagination = ({ pagination, onPageChange }: PaginationProps) => {
       <button
         onClick={() => handlePageChange(pagination.currentPage + 1)}
         disabled={pagination.currentPage === pagination.totalPages}
-        className="px-4 py-2 text-sm font-medium text-gray-700 bg-white border border-gray-300 rounded-lg hover:bg-gray-50 disabled:opacity-50">
+        className={clsx(
+          `px-4 py-2 text-sm font-medium text-gray-700 bg-white border border-gray-300 rounded-lg hover:bg-gray-50 disabled:opacity-50`,
+          pagination.currentPage === pagination.totalPages
+            ? 'cursor-not-allowed'
+            : 'cursor-pointer'
+        )}>
         Next
       </button>
     </div>

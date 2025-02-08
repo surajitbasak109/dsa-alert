@@ -13,6 +13,12 @@ datasource db {
   url      = env("DATABASE_URL")
 }
 
+model Company {
+  id    Int                @id @default(autoincrement())
+  name  String             @unique @db.VarChar(255)
+  posts CompaniesOnPosts[]
+}
+
 model Platform {
   id        Int      @id @default(autoincrement())
   name      String   @unique @db.VarChar(255)
@@ -20,39 +26,40 @@ model Platform {
   About     String?  @db.Text
   createdAt DateTime @default(now())
   updatedAt DateTime @updatedAt
-  posts      Post[]
+  posts     Post[]
 }
 
 model Tag {
-  id          Int           @id @default(autoincrement())
-  name        String        @unique @db.VarChar(255)
-  posts       TagsOnPosts[]
-  createdAt   DateTime      @default(now())
-  updatedAt   DateTime      @updatedAt
+  id        Int           @id @default(autoincrement())
+  name      String        @unique @db.VarChar(255)
+  posts     TagsOnPosts[]
+  createdAt DateTime      @default(now())
+  updatedAt DateTime      @updatedAt
 }
 
 model Post {
-  id          Int           @id @default(autoincrement())
-  title       String        @db.VarChar(255)
-  problemId   String        @db.VarChar(100)
-  link        String        @db.VarChar(200)
-  description String        @db.Text
-  difficulty  Int
-  platform    Platform      @relation(fields: [platformId], references: [id])
-  platformId  Int
-  tags        TagsOnPosts[]
-  solutions   Solution[]
+  id               Int                @id @default(autoincrement())
+  title            String             @db.VarChar(255)
+  problemId        String             @db.VarChar(100)
+  link             String             @db.VarChar(200)
+  description      String             @db.Text
+  difficulty       Int
+  platform         Platform           @relation(fields: [platformId], references: [id])
+  platformId       Int
+  tags             TagsOnPosts[]
+  solutions        Solution[]
+  companies        CompaniesOnPosts[]
 }
 
 model Solution {
-  id            Int           @id @default(autoincrement())
-  title         String        @db.VarChar(255)
-  description   String        @db.Text
-  solutionPath  String?       @db.VarChar(255)
-  createdAt     DateTime      @default(now())
-  updatedAt     DateTime      @updatedAt
-  postId        Int
-  post          Post          @relation(fields: [postId], references: [id], onDelete: Cascade)
+  id           Int      @id @default(autoincrement())
+  title        String   @db.VarChar(255)
+  description  String   @db.Text
+  solutionPath String?  @db.VarChar(255)
+  createdAt    DateTime @default(now())
+  updatedAt    DateTime @updatedAt
+  postId       Int
+  post         Post     @relation(fields: [postId], references: [id], onDelete: Cascade)
 }
 
 model TagsOnPosts {
@@ -64,4 +71,14 @@ model TagsOnPosts {
   assignedBy String?
 
   @@id([postId, tagId])
+}
+
+model CompaniesOnPosts {
+  posts      Post     @relation(fields: [postId], references: [id], onDelete: Cascade)
+  postId     Int
+  companies  Company  @relation(fields: [companyId], references: [id], onDelete: Cascade)
+  companyId  Int
+  assignedAt DateTime @default(now())
+
+  @@id([postId, companyId])
 }

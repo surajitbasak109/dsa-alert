@@ -22,6 +22,16 @@ export async function getAllPosts(page: number = 1) {
             }
           }
         },
+        companies: {
+          select: {
+            companies: {
+              select: {
+                id: true,
+                name: true
+              }
+            }
+          }
+        },
         platform: {
           select: {
             name: true
@@ -38,7 +48,11 @@ export async function getAllPosts(page: number = 1) {
       ...post,
       platform: post.platform.name,
       difficulty: difficultyText(post.difficulty),
-      tags: post.tags.map((tag) => ({ id: tag.tags.id, name: tag.tags.name }))
+      tags: post.tags.map((tag) => ({ id: tag.tags.id, name: tag.tags.name })),
+      companies: post.companies.map((company) => ({
+        id: company.companies.id,
+        name: company.companies.name
+      }))
     };
   });
   return {
@@ -52,28 +66,46 @@ export async function getAllPosts(page: number = 1) {
   };
 }
 
-export async function createPost(post: PostParam, tags: number[]) {
+export async function createPost(
+  post: PostParam,
+  tags: number[],
+  companies: number[] = []
+) {
   const newData = await db.post.create({
     data: {
       ...post,
       tags: {
-        create: tags.map((tag) => {
+        create: tags.map((tagId) => {
           return {
             assignedBy: 'Surajit',
             tags: {
               connect: {
-                id: tag
+                id: tagId
               }
             }
           };
         })
+      },
+      companies: {
+        create: companies.map((companyId) => ({
+          companies: {
+            connect: {
+              id: companyId
+            }
+          }
+        }))
       }
     }
   });
   return newData;
 }
 
-export async function updatePost(id: number, post: PostParam, tags: number[]) {
+export async function updatePost(
+  id: number,
+  post: PostParam,
+  tags: number[],
+  companies: number[] = []
+) {
   const existingPost = await db.post.findFirst({
     where: {
       id
@@ -85,6 +117,12 @@ export async function updatePost(id: number, post: PostParam, tags: number[]) {
   }
 
   await db.tagsOnPosts.deleteMany({
+    where: {
+      postId: id
+    }
+  });
+
+  await db.companiesOnPosts.deleteMany({
     where: {
       postId: id
     }
@@ -106,6 +144,17 @@ export async function updatePost(id: number, post: PostParam, tags: number[]) {
             }
           };
         })
+      },
+      companies: {
+        create: companies.map((companyId) => {
+          return {
+            companies: {
+              connect: {
+                id: companyId
+              }
+            }
+          };
+        })
       }
     }
   });
@@ -119,6 +168,11 @@ export async function deletePost(id: number) {
     throw new Error('Post not found');
   }
   await db.tagsOnPosts.deleteMany({
+    where: {
+      postId: id
+    }
+  });
+  await db.companiesOnPosts.deleteMany({
     where: {
       postId: id
     }
@@ -145,6 +199,16 @@ export async function getPost(id: number) {
           }
         }
       },
+      companies: {
+        select: {
+          companies: {
+            select: {
+              id: true,
+              name: true
+            }
+          }
+        }
+      },
       platform: {
         select: {
           name: true
@@ -160,6 +224,10 @@ export async function getPost(id: number) {
     platform: post.platform.name,
     difficultyText: difficultyText(post.difficulty),
     difficulty: post.difficulty,
-    tags: post.tags.map((tag) => ({ id: tag.tags.id, name: tag.tags.name }))
+    tags: post.tags.map((tag) => ({ id: tag.tags.id, name: tag.tags.name })),
+    companies: post.companies.map((company) => ({
+      id: company.companies.id,
+      name: company.companies.name
+    }))
   };
 }
