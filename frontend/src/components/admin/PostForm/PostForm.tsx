@@ -1,9 +1,10 @@
 import InputField from '@/components/UI/InputField';
 import { FormEvent, useEffect } from 'react';
-import TagsInput from './TagsInput';
 import DescriptionEditor from './DescriptionEditor';
-import { useActions, useAppState, } from '@/store';
-import CompanyInput from './CompanyInput';
+import { useActions, useAppState } from '@/store';
+import MultiSelectInput from '@/components/UI/MultiSelectInput';
+import { searchCompanies, searchTags } from '@/utils/api';
+import { MultiSelectTag } from '@/types';
 
 const difficulties = [
   {
@@ -53,11 +54,13 @@ const PostForm = ({ onCancel, id }: PostFormProp) => {
   }, [getPlatformSelectData]);
   const handleSubmit = (e: FormEvent) => {
     e.preventDefault();
-    const { selectedTags, ...rest } = postFormBody.data;
+    const { selectedTags, selectedCompanies, ...rest } = postFormBody.data;
     const tags = selectedTags.map((tag) => Number(tag.id));
+    const companies = selectedCompanies.map((company) => Number(company.id));
     const postBody = {
       ...rest,
-      tags
+      tags,
+      companies
     };
     if (id) {
       updatePost({ id, post: postBody });
@@ -66,6 +69,40 @@ const PostForm = ({ onCancel, id }: PostFormProp) => {
     }
     setPostFormEmpty();
     onCancel();
+  };
+
+  const searchCompaniesFromApi = async (
+    inputString: string
+  ): Promise<{ label: string; value: string }[]> => {
+    const response = await searchCompanies(inputString);
+    const data = response.data.map((tag) => ({
+      value: tag.id.toString(),
+      label: tag.name
+    }));
+    return data;
+  };
+
+  const searchTagsFromApi = async (
+    inputString: string
+  ): Promise<{ label: string; value: string }[]> => {
+    const response = await searchTags(inputString);
+    const data = response.data.map((tag) => ({
+      value: tag.id.toString(),
+      label: tag.name
+    }));
+    return data;
+  };
+
+  const handleCompanyInputChange = (tags: MultiSelectTag[]) => {
+    setSelectedCompanies(
+      tags.map((tag) => ({ id: parseInt(tag.value), name: tag.label }))
+    );
+  };
+
+  const handleTagInputChange = (tags: MultiSelectTag[]) => {
+    setSelectedTags(
+      tags.map((tag) => ({ id: parseInt(tag.value), name: tag.label }))
+    );
   };
 
   useEffect(() => {
@@ -177,19 +214,48 @@ const PostForm = ({ onCancel, id }: PostFormProp) => {
       </div>
 
       {!post && (
-        <TagsInput onChange={(selectedTags) => setSelectedTags(selectedTags)} />
-      )}
-
-      {post && (
-        <TagsInput
-          onChange={(selectedTags) => setSelectedTags(selectedTags)}
-          value={post.tags}
+        <MultiSelectInput
+          placeholder="Enter tags..."
+          label="Tags"
+          loadOptions={searchTagsFromApi}
+          onChange={handleTagInputChange}
         />
       )}
 
-      <CompanyInput
-        onChange={(selectedCompany) => setSelectedCompanies(selectedCompany)}
-      />
+      {post && (
+        <MultiSelectInput
+          placeholder="Enter tags..."
+          label="Tags"
+          loadOptions={searchTagsFromApi}
+          onChange={handleTagInputChange}
+          value={post.tags.map((tag) => ({
+            label: tag.name,
+            value: tag.id.toString()
+          }))}
+        />
+      )}
+
+      {!post && (
+        <MultiSelectInput
+          placeholder="Enter company..."
+          label="Companies"
+          loadOptions={searchCompaniesFromApi}
+          onChange={handleCompanyInputChange}
+        />
+      )}
+
+      {post && (
+        <MultiSelectInput
+          placeholder="Enter company..."
+          label="Companies"
+          loadOptions={searchCompaniesFromApi}
+          onChange={handleCompanyInputChange}
+          value={post.companies.map((company) => ({
+            label: company.name,
+            value: company.id.toString()
+          }))}
+        />
+      )}
 
       <InputField
         type="url"
@@ -206,14 +272,16 @@ const PostForm = ({ onCancel, id }: PostFormProp) => {
 
       <div className="flex items-center justify-start gap-4">
         <button
+          role="button"
           type="submit"
-          className="text-white bg-blue-700 hover:bg-blue-800 focus:ring-4 focus:outline-none focus:ring-blue-300 font-medium rounded-lg text-sm w-full sm:w-auto px-5 py-2.5 text-center">
+          className="text-white bg-blue-700 hover:bg-blue-800 focus:ring-4 focus:outline-none focus:ring-blue-300 font-medium rounded-full text-sm w-full sm:w-auto px-5 py-2.5 text-center">
           Submit
         </button>
         <button
+          role="button"
           onClick={onCancel}
           type="button"
-          className="text-white bg-slate-600 hover:bg-slate-800 focus:ring-4 focus:outline-none focus:ring-slate-300 font-medium rounded-lg text-sm w-full sm:w-auto px-5 py-2.5 text-center">
+          className="text-white bg-slate-600 hover:bg-slate-800 focus:ring-4 focus:outline-none focus:ring-slate-300 font-medium rounded-full text-sm w-full sm:w-auto px-5 py-2.5 text-center">
           Cancel
         </button>
       </div>

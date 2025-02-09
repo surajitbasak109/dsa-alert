@@ -1,19 +1,26 @@
 import PostForm from '@/components/admin/PostForm/PostForm';
 import PostTable from '@/components/admin/PostTable/PostTable';
+import ConfirmDialog from '@/components/UI/ConfirmDialog';
 import { useActions, useAppState } from '@/store';
 import { useEffect, useState } from 'react';
 
 const Post = () => {
   type mode = 'view' | 'create' | 'edit';
   const [mode, setMode] = useState<mode>('view');
+  const [deleteConfirmModalOpen, setDeleteConfirmModalOpen] = useState(false);
   const { selectedIds } = useAppState().postTable;
   const {
-    postAction: { getPosts, setPostEmpty },
+    postAction: { getPosts, setPostEmpty, deletePost },
     postFormAction: { setPostFormEmpty }
   } = useActions();
   useEffect(() => {
     getPosts();
   }, [getPosts]);
+
+  const handleDeletePost = () => {
+    deletePost(selectedIds[0]);
+    setDeleteConfirmModalOpen(false);
+  };
 
   return (
     <div className="container px-4 mx-auto md:px-1 lg:px-0">
@@ -37,7 +44,9 @@ const Post = () => {
           </button>
         )}
         {selectedIds.length > 0 && (
-          <button className="px-4 py-1 text-sm font-bold text-white uppercase bg-red-600 border border-red-600 rounded-full cursor-pointer hover:bg-red-700">
+          <button
+            onClick={() => setDeleteConfirmModalOpen(true)}
+            className="px-4 py-1 text-sm font-bold text-white uppercase bg-red-600 border border-red-600 rounded-full cursor-pointer hover:bg-red-700">
             Delete {selectedIds.length} post{selectedIds.length > 1 && 's'}
           </button>
         )}
@@ -54,6 +63,13 @@ const Post = () => {
           }}
         />
       )}
+      <ConfirmDialog
+        title="Are you sure?"
+        onClose={() => setDeleteConfirmModalOpen(false)}
+        open={deleteConfirmModalOpen}
+        onConfirm={handleDeletePost}>
+        <p>You're going to remove this post which cannot be undone</p>
+      </ConfirmDialog>
     </div>
   );
 };

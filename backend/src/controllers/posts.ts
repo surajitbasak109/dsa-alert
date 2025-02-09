@@ -32,9 +32,13 @@ export default class PostController {
   }
   async store(req: Request, res: Response) {
     try {
-      const { tags, ...postParam }: PostParam & { tags: number[] } = req.body;
+      const {
+        tags,
+        companies,
+        ...postParam
+      }: PostParam & { tags: number[]; companies: [] } = req.body;
       postParam.description = postParam.description.trim();
-      const createdData = await createPost(postParam, tags);
+      const createdData = await createPost(postParam, tags, companies);
       const post = await getPost(createdData.id);
       sendSuccessResponse(res, post, 200, `Post created successfully.`);
     } catch (error) {
@@ -44,11 +48,15 @@ export default class PostController {
   async update(req: Request, res: Response) {
     try {
       const postId = Number(req.params.postId);
-      const { tags, ...postParam }: PostParam & { tags: number[] } = req.body;
+      const {
+        tags,
+        companies,
+        ...postParam
+      }: PostParam & { tags: number[]; companies: number[] } = req.body;
       if (!postId) {
         throw new Error('Invalid post id');
       }
-      const updatedData = await updatePost(postId, postParam, tags);
+      const updatedData = await updatePost(postId, postParam, tags, companies);
       const post = await getPost(updatedData.id);
       sendSuccessResponse(res, post, 200, `Post updated successfully.`);
     } catch (error) {

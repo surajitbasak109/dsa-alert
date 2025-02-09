@@ -110,5 +110,38 @@ export const api = {
         timestamp: new Date().toISOString()
       };
     }
-  }
+  },
+  deletePost: async (id: number): Promise<ApiResponse<Post>> => {
+    try {
+      const response = await fetch(`${apiUrl}/posts/${id}`, {
+        method: 'delete',
+        headers: {
+          Accept: 'application/json',
+          'Content-Type': 'application/json'
+        },
+      });
+      const data = await response.json();
+
+      if (!response.ok) {
+        return {
+          status: false,
+          error: data.error || {},
+          code: response.status,
+          message: data.message || 'An error occurred',
+          timestamp: data?.timestamp || new Date().toISOString()
+        };
+      }
+
+      return data as SuccessResponse<Post>;
+    } catch (error) {
+      console.error('Network error:', error);
+      return {
+        status: false,
+        error: { message: 'Network error' },
+        code: 500,
+        message: 'Network error occurred',
+        timestamp: new Date().toISOString()
+      };
+    }
+  },
 };

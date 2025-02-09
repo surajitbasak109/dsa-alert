@@ -204,6 +204,7 @@ const DescriptionEditor = () => {
                   defaultLanguage={editor.defaultLanguage}
                   options={editor.options}
                   theme="vs-light"
+                  height="50vh"
                   onChange={handleOnEditorChange}
                   onMount={handleOnEditorMount}
                 />
@@ -212,7 +213,7 @@ const DescriptionEditor = () => {
           </div>
           <div
             className={clsx(
-              'flex-1 hidden px-6 pt-4 pb-2 overflow-auto border-t border-l border-[#0000000d] min-h-[50vh]',
+              'flex-1 hidden px-6 pt-4 overflow-auto border-t border-l border-[#0000000d] h-[50vh] pb-5',
               markdownPreviewVisible && 'md:block'
             )}>
             <ReactMarkdown

@@ -70,4 +70,9 @@ export type ApiErrorResponse = {
   timestamp: string;
 };
 
+export type MultiSelectTag = {
+  label: string;
+  value: string;
+};
+
 export type ApiResponse<T> = SuccessResponse<T> | ApiErrorResponse;

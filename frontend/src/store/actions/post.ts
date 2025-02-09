@@ -59,6 +59,14 @@ const updatePost = async (
   }
 };
 
+const deletePost = async ({ state, effects }: Context, postId: number) => {
+  await effects.api.deletePost(postId);
+  state.posts = state.posts.filter((post) => post.id !== postId);
+  state.postTable.posts = state.postTable.posts.filter(
+    (post) => post.id !== postId
+  );
+};
+
 const getPost = async ({ state, effects }: Context, id: number) => {
   const response = await effects.api.getPost(id);
   state.post = response.data;
@@ -76,5 +84,6 @@ export default {
   addPost,
   updatePost,
   setPostEmpty,
-  searchCompanies
+  searchCompanies,
+  deletePost
 };
