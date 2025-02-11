@@ -9,3 +9,7 @@ export const postSchema = z.object({
   platformId: z.number(),
   tags: z.array(z.number())
 });
+
+export const postDeleteSchema = z.object({
+  postIds: z.array(z.number())
+});

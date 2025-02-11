@@ -1,6 +1,6 @@
 import {
   createPost,
-  deletePost,
+  deletePosts,
   getPost,
   PostParam,
   updatePost,
@@ -65,11 +65,8 @@ export default class PostController {
   }
   async delete(req: Request, res: Response) {
     try {
-      const postId = Number(req.params.postId);
-      if (!postId) {
-        throw new Error('Invalid post id');
-      }
-      const deletedPost = await deletePost(postId);
+      const postIds: number[] = req.body.postIds;
+      const deletedPost = await deletePosts(postIds);
       sendSuccessResponse(res, deletedPost, 200, `Post deleted successfully.`);
     } catch (error) {
       sendErrorResponse(res, error?.toString(), 500, 'Server error');

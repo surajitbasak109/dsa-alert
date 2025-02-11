@@ -111,14 +111,15 @@ export const api = {
       };
     }
   },
-  deletePost: async (id: number): Promise<ApiResponse<Post>> => {
+  deletePost: async (ids: number[]): Promise<ApiResponse<Post>> => {
     try {
-      const response = await fetch(`${apiUrl}/posts/${id}`, {
+      const response = await fetch(`${apiUrl}/posts`, {
         method: 'delete',
         headers: {
           Accept: 'application/json',
           'Content-Type': 'application/json'
         },
+        body: JSON.stringify({ postIds: ids })
       });
       const data = await response.json();
 

@@ -1,16 +1,21 @@
 import { useActions, useAppState } from '@/store';
 import clsx from 'clsx';
-import { useEffect, useRef, useState } from 'react';
+import { createRef, useEffect, useState } from 'react';
 import { useParams } from 'react-router';
 import ReactMarkdown from 'react-markdown';
+import DisplayTopics from '@/components/admin/PostPreview/DisplayTopics';
+import BusinessIcon from '@/components/icons/BusinessIcon';
+import TagsIcon from '@/components/icons/TagsIcon';
 
 const PostPreview = () => {
   const { id } = useParams();
   const [error, setError] = useState<string | null>(null);
   const [isTopicsOpen, setIsTopicsOpen] = useState<boolean>(false);
+  const [isCompaniesOpen, setIsCompaniesOpen] = useState<boolean>(false);
   const { getPost, setPostEmpty } = useActions().postAction;
   const { post } = useAppState();
-  const topicsContainerRef = useRef<null | HTMLDivElement>(null);
+  const topicsContainerRef = createRef<HTMLDivElement>();
+  const companiesContainerRef = createRef<HTMLDivElement>();
   useEffect(() => {
     if (isNaN(parseInt(id as string))) {
       setError(
@@ -104,65 +109,22 @@ const PostPreview = () => {
           </div>
           <div className="flex flex-col gap-3 mt-6">
             <hr className="border-gray-300 border-divider-3" />
-            <div className="flex flex-col">
-              <div
-                ref={topicsContainerRef}
-                onClick={() => setIsTopicsOpen((prev) => !prev)}
-                className="flex items-center transition-colors cursor-pointer text-label-2 hover:text-lable-1">
-                <div className="flex-1 text-sm leading-[22px]">
-                  <div className="flex items-center gap-2">
-                    <div className="relative text-[16px] leading-[normal] p-0.5 before:block before:h-4 before:w-4 text-sd-foreground fill-none stroke-current">
-                      <svg
-                        className="absolute -translate-x-1/2 -translate-y-1/2 left-1/2 top-1/2"
-                        xmlns="http://www.w3.org/2000/svg"
-                        width="1em"
-                        height="1em"
-                        viewBox="0 0 20 20">
-                        <path
-                          fill="currentColor"
-                          d="M.205 9.166A.65.65 0 0 1 0 8.696V3.358c-.01-.334.076-.639.27-.89C.5 2.172.848 2.024 1.299 2h5.518c.18 0 .353.07.48.194l9.015 8.798c.186.22.273.491.24.774c-.027.234-.124.45-.322.673l-5.443 5.236a1.12 1.12 0 0 1-.782.319c-.275 0-.532-.098-.818-.318zm1.15-.747l8.628 8.18l5.122-4.925l-8.57-8.36h-5.18zM9.976 3.32h-2.99a.667.667 0 0 1-.677-.657c0-.363.304-.658.678-.658h3.271c.18 0 .353.07.48.194l9.015 8.798c.187.22.273.492.24.775c-.027.234-.124.449-.322.673l-5.442 5.236a1.12 1.12 0 0 1-.782.318c-.276 0-.532-.097-.819-.318l-1.341-1.271a.643.643 0 0 1-.012-.93a.69.69 0 0 1 .958-.01l1.191 1.134l5.123-4.924zm-5.48 4.845c-1.122 0-2.032-.882-2.032-1.97c0-1.09.91-1.972 2.032-1.972s2.031.882 2.031 1.971s-.91 1.971-2.031 1.971m0-1.314a.667.667 0 0 0 .677-.657a.667.667 0 0 0-.677-.657a.667.667 0 0 0-.678.657c0 .363.304.657.678.657"></path>
-                      </svg>
-                    </div>
-                    <div className="text-body text-text-primary dark:text-text-primary">
-                      Topics
-                    </div>
-                  </div>
-                </div>
-                <div className="text-[24px] transition-colors text-gray-4 dark:text-dark-gray-4 group-hover:text-gray-5 dark:group-hover:text-dark-gray-5">
-                  <svg
-                    className={clsx(`transition-transform origin-center`, {
-                      'rotate-180': isTopicsOpen
-                    })}
-                    xmlns="http://www.w3.org/2000/svg"
-                    width="1em"
-                    height="1em"
-                    viewBox="0 0 24 24">
-                    <path
-                      fill="none"
-                      stroke="currentColor"
-                      strokeLinecap="round"
-                      d="m19.142 9.929l-6.364 6.364a1 1 0 0 1-1.415 0L5 9.929"></path>
-                  </svg>
-                </div>
-              </div>
-              <div
-                className="overflow-hidden transition-all"
-                style={{
-                  height: isTopicsOpen ? '32px' : 0,
-                  transitionDelay: '0.25s'
-                }}>
-                <div className="flex flex-wrap gap-1 mt-2 pl-7">
-                  {post.tags.map((tag) => (
-                    <span
-                      className="relative inline-flex items-center justify-center gap-1 px-2 py-1 text-xs no-underline rounded-full hover:text-current bg-fill-secondary text-text-secondary"
-                      key={tag.id}>
-                      {tag.name}
-                    </span>
-                  ))}
-                </div>
-              </div>
-            </div>
-            <hr className="border-gray-300 border-divider-3" />
+            <DisplayTopics
+              title="Topics"
+              ref={topicsContainerRef}
+              data={post.tags}
+              isOpen={isTopicsOpen}
+              icon={<TagsIcon />}
+              setIsOpen={(isOpen) => setIsTopicsOpen(isOpen)}
+            />
+            <DisplayTopics
+              title="Companies"
+              ref={companiesContainerRef}
+              data={post.companies}
+              isOpen={isCompaniesOpen}
+              setIsOpen={(isOpen) => setIsCompaniesOpen(isOpen)}
+              icon={<BusinessIcon />}
+            />
           </div>
         </div>
       )}

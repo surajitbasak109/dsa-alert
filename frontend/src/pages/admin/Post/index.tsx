@@ -18,7 +18,7 @@ const Post = () => {
   }, [getPosts]);
 
   const handleDeletePost = () => {
-    deletePost(selectedIds[0]);
+    deletePost(selectedIds);
     setDeleteConfirmModalOpen(false);
   };
 
@@ -68,7 +68,10 @@ const Post = () => {
         onClose={() => setDeleteConfirmModalOpen(false)}
         open={deleteConfirmModalOpen}
         onConfirm={handleDeletePost}>
-        <p>You're going to remove this post which cannot be undone</p>
+        <p>You're going to remove following post id's which cannot be undone</p>
+        <ul className='flex justify-start items-center mt-4 mb-2 gap-2 flex-wrap'>
+          {selectedIds.map(id => <li className='bg-slate-300 px-2 py-1 rounded-sm' key={id}>{id}</li>)}
+        </ul>
       </ConfirmDialog>
     </div>
   );

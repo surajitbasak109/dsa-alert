@@ -2,7 +2,7 @@ import PostController from '@controllers/posts';
 import TagController from '@controllers/tags';
 import { validateData } from '@middlewares/validation-middleware';
 import express, { Request, Response } from 'express';
-import { postSchema } from '@schemas/postSchema';
+import { postDeleteSchema, postSchema } from '@schemas/postSchema';
 import { tagSchema } from '@schemas/tagSchema';
 import PlatformController from '@controllers/platforms';
 import { platformSchema } from '@schemas/platformSchema';
@@ -28,7 +28,7 @@ apiRouter.put(
   postController.update
 );
 apiRouter.get('/posts/:postId', postController.show);
-apiRouter.delete('/posts/:postId', postController.delete);
+apiRouter.delete('/posts/', validateData(postDeleteSchema), postController.delete);
 
 /**
  * Tag

@@ -59,11 +59,11 @@ const updatePost = async (
   }
 };
 
-const deletePost = async ({ state, effects }: Context, postId: number) => {
-  await effects.api.deletePost(postId);
-  state.posts = state.posts.filter((post) => post.id !== postId);
+const deletePost = async ({ state, effects }: Context, postIds: number[]) => {
+  await effects.api.deletePost(postIds);
+  state.posts = state.posts.filter((post) => !postIds.includes(post.id));
   state.postTable.posts = state.postTable.posts.filter(
-    (post) => post.id !== postId
+    (post) => !postIds.includes(post.id)
   );
 };
 

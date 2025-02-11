@@ -185,6 +185,31 @@ export async function deletePost(id: number) {
   return deletedPost;
 }
 
+export async function deletePosts(postIds: number[]) {
+  await db.tagsOnPosts.deleteMany({
+    where: {
+      postId: {
+        in: postIds
+      }
+    }
+  });
+  await db.companiesOnPosts.deleteMany({
+    where: {
+      postId: {
+        in: postIds
+      }
+    }
+  });
+  const deletedPosts = await db.post.deleteMany({
+    where: {
+      id: {
+        in: postIds
+      }
+    }
+  });
+  return deletedPosts;
+}
+
 export async function getPost(id: number) {
   const post = await db.post.findFirst({
     where: { id },
